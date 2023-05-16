@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 
 const ManagerPage = () => {
   const loggedInUser = localStorage.getItem("user");
   if (loggedInUser) {
-    const user =  JSON.parse(loggedInUser);
+    const user = JSON.parse(loggedInUser);
     if (user.role !== 'manager') {
       return (
         <div className="access-denied">
@@ -25,6 +25,7 @@ const ManagerPage = () => {
             <button className="btn btn-primary btn-lg">Manage Courses</button>
           </Link>
         </div>
+
       </div>
     );
   };

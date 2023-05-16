@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
+import ManageUsers from './ManageUsers';
 
 
 const App = () => {
@@ -76,11 +77,12 @@ const App = () => {
   // if there's a user show the message below
   if (user) {
     return (
-      <div class="fixed-top fixed-right border p-3 custom-font">
+      <div class="fixed-top fixed-right border p-3">
         <div class="mb-3">{user.username} is logged in</div>
         <button class="btn btn-primary" onClick={handleLogout}>Logout</button>
         <Routes>
           <Route path="/manager" element={<ManagerPage />} />
+          <Route path="/users" element={<ManageUsers />} />
         </Routes>
       </div>
     );
