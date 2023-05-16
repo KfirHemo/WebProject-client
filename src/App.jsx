@@ -22,6 +22,7 @@ const App = () => {
     setUsername("");
     setPassword("");
     localStorage.clear();
+    navigate('/');
   };
 
   useEffect(() => {
