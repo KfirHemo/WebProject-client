@@ -2,10 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
-import axios from 'axios';
 import ManageUsers from './ManageUsers';
-import '../styles/App.css';
 import { getUsers } from '../apiService';
+import '../styles/App.css';
 
 const App = () => {
   // const DB = [
