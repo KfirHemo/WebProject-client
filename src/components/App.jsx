@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
 import ManageUsers from './ManageUsers';
@@ -37,15 +38,14 @@ const App = () => {
   const handleSubmit = async e => {
     try {
       e.preventDefault();
-      const user = { username, password };
-      // send the username and password to the server
-      /*const response = await axios.post(
-        "http://blogservice.herokuapp.com/api/login",
-        user
-      );*/
+    const user = { username, password };
+
+    // Send the username and password to the server
+    const response = await axios.get("https://localhost:7187/CheckUserLogin?username=" + username +"&password=" + password);
+    const foundUser = response.data;
       // set the state of the user
-      //setUser(response.data)
-      const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
+      setUser(response.data)
+      //const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
       if (foundUser.length) {
         setUser(foundUser[0]);
         // store the user in localStorage
