@@ -1,0 +1,21 @@
+.section-separator {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.table-wrapper {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.pagination {
+    justify-content: flex-start;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    justify-content: space-between;
+}

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
 import ManageUsers from './ManageUsers';
+import '../styles/App.css';
 
 
 const App = () => {
@@ -67,33 +68,36 @@ const App = () => {
       case 'manager':
         navigate('/manager');
         break;
-      case 'teacher':
-      case 'student':
+      default:
+        navigate('/');
         break;
     }
   }
 
-
   // if there's a user show the message below
   if (user) {
     return (
-      <div class="fixed-top fixed-right border p-3">
-        <div class="mb-3">{user.username} is logged in</div>
-        <button class="btn btn-primary" onClick={handleLogout}>Logout</button>
-        <Routes>
-          <Route path="/manager" element={<ManagerPage />} />
-          <Route path="/users" element={<ManageUsers />} />
-        </Routes>
+      <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 64px)' }}>
+        <div className="fixed-top d-flex align-items-center justify-content-between bg-primary text-white p-2">
+          <div>{user.username} is logged in</div>
+          <button className="btn btn-light" onClick={handleLogout}>Logout</button>
+        </div>
+        <div className="mt-3 pt-5">
+          <Routes>
+            <Route path="/manager" element={<ManagerPage />} />
+            <Route path="/users" element={<ManageUsers />} />
+          </Routes>
+        </div>
       </div>
     );
   }
   // if there's no user, show the login form
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
-      <div className="col-md-6">
+      <div className="col-md-3">
         <h1 className="text-center">Login</h1>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div>
             <label htmlFor="username">Username:</label>
             <input
               className="form-control"
@@ -103,7 +107,7 @@ const App = () => {
               onChange={({ target }) => setUsername(target.value)}
             />
           </div>
-          <div className="form-group">
+          <div>
             <label htmlFor="password">Password:</label>
             <input
               className="form-control"
