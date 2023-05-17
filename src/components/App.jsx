@@ -5,7 +5,7 @@ import ManagerPage from './ManagerPage';
 import axios from 'axios';
 import ManageUsers from './ManageUsers';
 import '../styles/App.css';
-import { AxiosResponse, AxiosError } from 'axios'
+import { getUsers } from '../apiService';
 
 const App = () => {
   // const DB = [
@@ -44,7 +44,7 @@ const App = () => {
     // Send the username and password to the server
     
     let foundUser;
-    const response = await axios.get("https://localhost:7187/CheckUserLogin?username=" + username +"&password=" + password).then((response) => {
+    await getUsers(username,password).then((response) => {
        foundUser = response.data;
     }).catch((e) => {
       alert("Connection error")
