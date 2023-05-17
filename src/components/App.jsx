@@ -1,20 +1,20 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
+import axios from 'axios';
 import ManageUsers from './ManageUsers';
 import '../styles/App.css';
-
+import { AxiosResponse, AxiosError } from 'axios'
 
 const App = () => {
-  const DB = [
-    { role: "manager", username: "man", password: "1234" },
-    { role: "teacher", username: "teach1", password: "4532" },
-    { role: "teacher", username: "teach2", password: "235wd" },
-    { role: "student", username: "stu1", password: "12345" },
-    { role: "student", username: "stu2", password: "12343" },
-  ];
+  // const DB = [
+  //   { role: "manager", username: "man", password: "1234" },
+  //   { role: "teacher", username: "teach1", password: "4532" },
+  //   { role: "teacher", username: "teach2", password: "235wd" },
+  //   { role: "student", username: "stu1", password: "12345" },
+  //   { role: "student", username: "stu2", password: "12343" },
+  // ];
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -42,20 +42,27 @@ const App = () => {
     const user = { username, password };
 
     // Send the username and password to the server
-    const response = await axios.get("https://localhost:7187/CheckUserLogin?username=" + username +"&password=" + password);
-    const foundUser = response.data;
+    
+    let foundUser;
+    const response = await axios.get("https://localhost:7187/CheckUserLogin?username=" + username +"&password=" + password).then((response) => {
+       foundUser = response.data;
+    }).catch((e) => {
+      alert("Connection error")
+    });
+   
+    
       // set the state of the user
-      setUser(response.data)
+      
       //const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
-      if (foundUser.length) {
-        setUser(foundUser[0]);
+      if (foundUser) {
+        setUser(foundUser);
         // store the user in localStorage
-        localStorage.setItem('user', JSON.stringify(foundUser[0]));//response.data)
+        localStorage.setItem('user', JSON.stringify(foundUser));//response.data)
         console.log(foundUser);//response.data)
         await handleNavigation(foundUser);
       }
       else {
-        console.log(`${user.username} not found`);
+        alert("Invalid login details")
       }
     } catch (e) {
       console.log(e);
@@ -64,8 +71,8 @@ const App = () => {
   const navigate = useNavigate()
 
   const handleNavigation = async (user) => {
-    switch (user[0].role) {
-      case 'manager':
+    switch (user.type) {
+      case 'Manager':
         navigate('/manager');
         break;
       default:
