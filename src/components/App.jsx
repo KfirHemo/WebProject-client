@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
 import ManageUsers from './ManageUsers';
-import { getUsers } from '../apiService';
+import { getUsers } from '../data/apiService';
 import '../styles/App.css';
 
 const App = () => {
@@ -38,20 +38,20 @@ const App = () => {
   const handleSubmit = async e => {
     try {
       e.preventDefault();
-    const user = { username, password };
+      const user = { username, password };
 
-    // Send the username and password to the server
-    
-    let foundUser;
-    await getUsers(username,password).then((response) => {
-       foundUser = response.data;
-    }).catch((e) => {
-      alert("Connection error")
-    });
-   
-    
+      // Send the username and password to the server
+
+      let foundUser;
+      await getUsers(username, password).then((response) => {
+        foundUser = response.data;
+      }).catch((e) => {
+        alert("Invalid login details")
+      });
+
+
       // set the state of the user
-      
+
       //const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
       if (foundUser) {
         setUser(foundUser);
@@ -59,9 +59,6 @@ const App = () => {
         localStorage.setItem('user', JSON.stringify(foundUser));//response.data)
         console.log(foundUser);//response.data)
         await handleNavigation(foundUser);
-      }
-      else {
-        alert("Invalid login details")
       }
     } catch (e) {
       console.log(e);
