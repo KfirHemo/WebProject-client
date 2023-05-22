@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
 import ManageUsers from './ManageUsers';
-import { getUsers } from '../data/apiService';
+import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
 
 const App = () => {
@@ -36,20 +36,17 @@ const App = () => {
   }, []);
 
   const handleSubmit = async e => {
-    try {
       e.preventDefault();
       const user = { username, password };
 
       // Send the username and password to the server
-
       let foundUser;
-      await getUsers(username, password).then((response) => {
-        foundUser = response.data;
-      }).catch((e) => {
-        alert("Invalid login details")
-      });
-
-
+      try {
+        const res = await checkUserExists(username, password);
+        foundUser = res.data;
+      } catch (e) {
+        alert(e.response.data);
+      }
       // set the state of the user
 
       //const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
@@ -60,9 +57,6 @@ const App = () => {
         console.log(foundUser);//response.data)
         await handleNavigation(foundUser);
       }
-    } catch (e) {
-      console.log(e);
-    }
   };
   const navigate = useNavigate()
 
@@ -82,7 +76,7 @@ const App = () => {
     return (
       <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 64px)' }}>
         <div className="fixed-top d-flex align-items-center justify-content-between bg-primary text-white p-2">
-          <div>{user.username} is logged in</div>
+          <div>{user.name} is logged in</div>
           <button className="btn btn-light" onClick={handleLogout}>Logout</button>
         </div>
         <div className="mt-3 pt-5">

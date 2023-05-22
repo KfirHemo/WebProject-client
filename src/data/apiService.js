@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://127.0.0.1:5000';
+const API_BASE_URL = 'https://localhost:7187';
 
 const apiService = axios.create({
   baseURL: API_BASE_URL,
@@ -10,4 +10,8 @@ const apiService = axios.create({
 });
 export const getApiService = async () => {
   return apiService;
+}
+
+export const checkUserExists = async (user, pass) => {
+  return await apiService.get(`/CheckUserLogin?username=${user}&password=${pass}`);
 }

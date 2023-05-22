@@ -1,9 +1,9 @@
 import { getApiService } from './apiService';
 
-export const getUsers = async (username, password) => {
+export const getUsers = async () => {
     try {
         const apiService = await getApiService();
-        return apiService.get(`/CheckUserLogin?username=${username}&password=${password}`);
+        return apiService.get('/GetUsers');
     } catch (e) {
         console.error(e);
         return null;
@@ -12,16 +12,6 @@ export const getUsers = async (username, password) => {
 
 // Example POST request
 export const createUser = async (userData) => {
-    try {
-        const apiService = await getApiService();
-        return apiService.post('/users', userData);
-    } catch (e) {
-        console.error(e);
-    }
-};
-
-// Example PUT request
-export const updateUser = async (userId, userData) => {
     try {
         const apiService = await getApiService();
         return apiService.post('/users', userData);
