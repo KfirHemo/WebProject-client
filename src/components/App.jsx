@@ -7,14 +7,6 @@ import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
 
 const App = () => {
-  // const DB = [
-  //   { role: "manager", username: "man", password: "1234" },
-  //   { role: "teacher", username: "teach1", password: "4532" },
-  //   { role: "teacher", username: "teach2", password: "235wd" },
-  //   { role: "student", username: "stu1", password: "12345" },
-  //   { role: "student", username: "stu2", password: "12343" },
-  // ];
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState();
