@@ -42,7 +42,6 @@ const ManageUsers = () => {
     const getInitialUsers = async () => {
       const fetchedUsers = await fetchUsers();
       setUsers(fetchedUsers);
-      //onPaginationUpdate(1);
     };
     getInitialUsers();
   }, []);
@@ -107,7 +106,6 @@ const ManageUsers = () => {
       <Container fluid>
         <h1 className="mb-4 text-center">Manage Users</h1>
         <hr className="section-separator" />
-
         <div className="col-md-5 mb-3">
           <Form onSubmit={handleAddUser}>
             <h3>Add User</h3>
@@ -155,7 +153,6 @@ const ManageUsers = () => {
               </Form.Group>
             </Row>
           </Form>
-
           <hr className="section-separator" />
           <Form.Label>Filter users</Form.Label>
           <Row>
@@ -181,7 +178,6 @@ const ManageUsers = () => {
             </Col>
           </Row>
         </div>
-
         <div className="table-wrapper">
           <Table striped bordered hover>
             <thead>
@@ -211,7 +207,6 @@ const ManageUsers = () => {
               ))}
             </tbody>
           </Table>
-
         </div>
         <PaginationComponent
           currentPage={1}
@@ -223,8 +218,6 @@ const ManageUsers = () => {
           }}
           availableItemsPerPage={[10, 20, 50]}
         />
-
-
       </Container >
       <ConfirmModal
         show={showDeleteModal}
