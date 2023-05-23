@@ -36,27 +36,28 @@ const App = () => {
   }, []);
 
   const handleSubmit = async e => {
-      e.preventDefault();
-      const user = { username, password };
+    e.preventDefault();
+    const user = { username, password };
 
-      // Send the username and password to the server
-      let foundUser;
-      try {
-        const res = await checkUserExists(username, password);
+    // Send the username and password to the server
+    let foundUser;
+    try {
+      const res = await checkUserExists(username, password);
+      if (res)
         foundUser = res.data;
-      } catch (e) {
-        alert(e.response.data);
-      }
-      // set the state of the user
+    } catch (e) {
+      alert(e.response.data);
+    }
+    // set the state of the user
 
-      //const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
-      if (foundUser) {
-        setUser(foundUser);
-        // store the user in localStorage
-        localStorage.setItem('user', JSON.stringify(foundUser));//response.data)
-        console.log(foundUser);//response.data)
-        await handleNavigation(foundUser);
-      }
+    //const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
+    if (foundUser) {
+      setUser(foundUser);
+      // store the user in localStorage
+      localStorage.setItem('user', JSON.stringify(foundUser));//response.data)
+      console.log(foundUser);//response.data)
+      await handleNavigation(foundUser);
+    }
   };
   const navigate = useNavigate()
 
