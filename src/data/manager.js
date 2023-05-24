@@ -6,10 +6,10 @@ if (config.TEST_MODE) {
   setupMocks();
 }
 
-export const getUsers = async () => {
+export const getUsers = async (type = "") => {
   try {
     const apiService = await getApiService();
-    return apiService.get('/GetUsers');
+    return apiService.get('/GetUsers', { params: { type } });
   } catch (e) {
     console.error(e);
     return null;

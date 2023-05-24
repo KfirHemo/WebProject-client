@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
 import ManageUsers from './ManageUsers';
+import ManageCourses from './ManageCourses';
 import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
 
@@ -76,6 +77,7 @@ const App = () => {
           <Routes>
             <Route path="/manager" element={<ManagerPage />} />
             <Route path="/users" element={<ManageUsers />} />
+            <Route path="/courses" element={<ManageCourses />} />
           </Routes>
         </div>
       </div>
