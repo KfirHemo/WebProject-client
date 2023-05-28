@@ -5,25 +5,22 @@ import PaginationComponent from './PaginationComponent';
 import { getCoursesOfTeacher, removeCourse, getUsers } from '../data/manager';
 import '../styles/ManageCourses.css';
 import Select from 'react-select';
+import { Teacher, Course, UserType } from '../data/types';
 
 const ManageCourses = () => {
-    const [teachers, setTeachers] = useState([]);
-    const [selectedTeacher, setSelectedTeacher] = useState(null);
-    const [courses, setCourses] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [coursesPerPage, setCoursesPerPage] = useState(10);
-    const [courseToRemove, setCourseToRemove] = useState({});
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
+    const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [coursesPerPage, setCoursesPerPage] = useState<number>(10);
+    const [courseToRemove, setCourseToRemove] = useState<Course>({ id: '', name: '', code: '' });
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchTeachers = async () => {
             try {
-                const fetchedTeachers = await getUsers('teacher');
-                if (
-                    !fetchedTeachers ||
-                    fetchedTeachers?.status !== 200 ||
-                    !fetchedTeachers?.data
-                ) {
+                const fetchedTeachers = await getUsers(UserType.Teacher);
+                if (!fetchedTeachers || fetchedTeachers.status !== 200 || !fetchedTeachers.data) {
                     console.error('Error when getting teachers.');
                     return;
                 }
@@ -42,11 +39,7 @@ const ManageCourses = () => {
             if (selectedTeacher) {
                 try {
                     const fetchedCourses = await getCoursesOfTeacher(selectedTeacher.id);
-                    if (
-                        !fetchedCourses ||
-                        fetchedCourses?.status !== 200 ||
-                        !fetchedCourses?.data
-                    ) {
+                    if (!fetchedCourses || fetchedCourses.status !== 200 || !fetchedCourses.data) {
                         console.error('Error when getting courses.');
                         return;
                     }
@@ -62,7 +55,7 @@ const ManageCourses = () => {
         fetchCourses();
     }, [selectedTeacher]);
 
-    const handleTeacherChange = (selectedOption) => {
+    const handleTeacherChange = (selectedOption: Teacher | null) => {
         setSelectedTeacher(selectedOption);
     };
 
@@ -73,13 +66,13 @@ const ManageCourses = () => {
         setShowDeleteModal(false);
 
         try {
-            await removeCourse(courseToRemove.id);
+            await removeCourse(courseToRemove);
         } catch (error) {
             console.error(`Error when removing course: ${error}`);
         }
     };
 
-    const handleDeleteConfirmation = (course) => {
+    const handleDeleteConfirmation = (course: Course) => {
         setCourseToRemove(course);
         setShowDeleteModal(true);
     };
@@ -118,10 +111,7 @@ const ManageCourses = () => {
                         </thead>
                         <tbody>
                             {courses
-                                .slice(
-                                    (currentPage - 1) * coursesPerPage,
-                                    currentPage * coursesPerPage
-                                )
+                                .slice((currentPage - 1) * coursesPerPage, currentPage * coursesPerPage)
                                 .map((course, index) => (
                                     <tr key={index}>
                                         <td>{course.name}</td>

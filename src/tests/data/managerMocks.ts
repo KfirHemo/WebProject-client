@@ -1,56 +1,56 @@
-import { addMockApiCalls } from "./apiServiceMocks";
+import { MockApiCall, addMockApiCalls, methodTypes } from "./apiServiceMocks";
 
-const mocks = [
+const mocks: MockApiCall[] = [
     {
-        method: 'Post',
+        method: methodTypes.Post,
         url: '/AddUser',
         response: {
             status: 200,
-            data: { id: 1 }
+            data: { id: 1 },
         },
     },
     {
-        method: 'Delete',
+        method: methodTypes.Delete,
         url: '/RemoveUser',
         response: {
             status: 200,
-            data: { id: 1 }
+            data: { id: 1 },
         },
     },
     {
-        method: 'Post',
+        method: methodTypes.Post,
         url: '/AddCourse',
         response: {
             status: 200,
-            data: { id: 2 }
+            data: { id: 2 },
         },
     },
     {
-        method: 'Delete',
+        method: methodTypes.Delete,
         url: '/RemoveCourse',
         response: {
             status: 200,
-            data: { id: 2 }
+            data: { id: 2 },
         },
     },
     {
-        method: 'Post',
+        method: methodTypes.Post,
         url: '/AddCourseForTeacher',
         response: {
             status: 200,
-            data: {}
+            data: {},
         },
     },
     {
-        method: 'Delete',
+        method: methodTypes.Delete,
         url: '/RemoveTeacherFromCourse',
         response: {
             status: 200,
-            data: {}
+            data: {},
         },
     },
     {
-        method: 'Get',
+        method: methodTypes.Get,
         url: '/GetUsers',
         response: {
             status: 200,
@@ -60,11 +60,11 @@ const mocks = [
                 { id: 4, name: 'User4', type: 'student', password: '1234' },
                 { id: 5, name: 'User5', type: 'student', password: '1234' },
                 { id: 6, name: 'User6', type: 'student', password: '1234' },
-            ]
+            ],
         },
     },
     {
-        method: 'Get',
+        method: methodTypes.Get,
         url: '/GetCourses',
         response: {
             status: 200,
@@ -75,11 +75,11 @@ const mocks = [
                 { id: 4, name: 'Algorithms' },
                 { id: 5, name: 'Logic' },
                 { id: 6, name: 'Automata' },
-            ]
+            ],
         },
     },
     {
-        method: 'Get',
+        method: methodTypes.Get,
         url: '/GetCoursesOfTeacher',
         response: {
             status: 200,
@@ -87,11 +87,11 @@ const mocks = [
                 { id: 4, name: 'Algorithms' },
                 { id: 5, name: 'Logic' },
                 { id: 6, name: 'Automata' },
-            ]
+            ],
         },
     },
 ];
 
-export const setupMocks = () => {
+export const setupMocks = (): void => {
     addMockApiCalls(mocks);
-}
+};

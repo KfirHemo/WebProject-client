@@ -1,23 +1,32 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Form, Col, Pagination } from 'react-bootstrap';
 
-const PaginationComponent = ({
+interface PaginationComponentProps {
+    currentPage: number;
+    itemsPerPage: number;
+    totalItems: number;
+    onPageChange: (pageNumber: number) => void;
+    onItemsPerPageChange: (itemsPerPage: number) => void;
+    availableItemsPerPage: number[];
+}
+
+const PaginationComponent: React.FC<PaginationComponentProps> = ({
     currentPage,
     itemsPerPage,
     totalItems,
     onPageChange,
     onItemsPerPageChange,
-    availableItemsPerPage
+    availableItemsPerPage,
 }) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    const handlePageChange = (pageNumber) => {
+    const handlePageChange = (pageNumber: number) => {
         if (typeof onPageChange === 'function') {
             onPageChange(pageNumber);
         }
     };
 
-    const handleItemsPerPageChange = (e) => {
+    const handleItemsPerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedItemsPerPage = parseInt(e.target.value, 10);
         const newTotalPages = Math.ceil(totalItems / selectedItemsPerPage);
 

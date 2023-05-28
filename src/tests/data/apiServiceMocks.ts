@@ -1,21 +1,34 @@
 import MockAdapter from 'axios-mock-adapter';
+import { AxiosInstance } from 'axios';
 
 /* HTTP method types enum */
-const methodTypes = {
-    Any: 'Any',
-    Post: 'Post',
-    Get: 'Get',
-    Delete: 'Delete'
-};
+export enum methodTypes {
+    Any = 'Any',
+    Post = 'Post',
+    Get = 'Get',
+    Delete = 'Delete',
+}
+
+/* Mock API call type */
+export interface MockApiCall {
+    method: methodTypes;
+    url: string;
+    response: {
+        status: number;
+        data: any;
+    };
+}
+
 
 /* Mock axios service adapter that replaces the server connection in test mode. */
-let mockAdapter;
-const createMockService = (apiService) => {
+let mockAdapter: MockAdapter;
+
+export const createMockService = (apiService: AxiosInstance) => {
     mockAdapter = new MockAdapter(apiService);
 };
 
-/* This function recieves an object array that includes the mock API calls and response, 
-   and then sets them to the mock adapter according to the HTTP method type. 
+/* This function receives an object array that includes the mock API calls and response,
+   and then sets them to the mock adapter according to the HTTP method type.
 
    The mock object format is:
    {
@@ -29,21 +42,21 @@ const createMockService = (apiService) => {
     },
    }
 
-  method: The HTTP method for the request (Any,Post,Get,Delete)
-  url: The HTTP url for the request, must begin with '/'
+  method: The HTTP method for the request (Any, Post, Get, Delete)
+  url: The HTTP URL for the request, must begin with '/'
   response: The response object returned from the server
-  status: A number which represents the status returned from the server (200,404,etc.)
+  status: A number that represents the status returned from the server (200, 404, etc.)
   data: The data passed in the response (user data, course data, etc...)
 
   See example for use in apiService.js file.
 */
-const addMockApiCalls = (mocks) => {
+export const addMockApiCalls = (mocks: MockApiCall[]) => {
     // Check a parameter was passed and it's an array, and that the mock adapter was created.
     if (!mocks || !Array.isArray(mocks) || !mockAdapter) {
         return;
     }
 
-    // For each mock in the mocks array parameter extract from it the method, url and response and add the corresponding event.
+    // For each mock in the mocks array parameter, extract from it the method, URL, and response, and add the corresponding event.
     mocks.forEach(({ method, url, response }) => {
         switch (method) {
             case methodTypes.Any:
@@ -64,6 +77,3 @@ const addMockApiCalls = (mocks) => {
         }
     });
 };
-
-
-export { methodTypes, createMockService, addMockApiCalls };

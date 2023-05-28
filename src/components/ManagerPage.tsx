@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import { UserType } from '../data/types';
 
 const ManagerPage = () => {
   const loggedInUser = localStorage.getItem("user");
   // if user is not logged in and tried to navigate to this page, don't display
   if (!loggedInUser) {
-    return;
+    return null;
   }
   const user = JSON.parse(loggedInUser);
-  if (user.type !== 'Manager') {
+  if (user.type !== UserType.Manager) {
     return (
       <div className="access-denied">
         <h1>Access Denied</h1>
@@ -28,9 +29,8 @@ const ManagerPage = () => {
           <button className="btn btn-primary btn-lg">Manage Courses</button>
         </Link>
       </div>
-
     </div>
   );
+};
 
-}
 export default ManagerPage;

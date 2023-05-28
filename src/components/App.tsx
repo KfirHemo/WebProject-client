@@ -6,72 +6,69 @@ import ManageUsers from './ManageUsers';
 import ManageCourses from './ManageCourses';
 import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
+import { User, UserType } from '../data/types';
 
-const App = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState();
+const App: React.FC = () => {
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [user, setUser] = useState<User | undefined>();
 
   const handleLogout = () => {
-    setUser();
-    setUsername("");
-    setPassword("");
+    setUser(undefined);
+    setUsername('');
+    setPassword('');
     localStorage.clear();
     navigate('/');
   };
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
+    const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
-      const foundUser = loggedInUser;
-      setUser(JSON.parse(foundUser));
+      const foundUser = JSON.parse(loggedInUser) as User;
+      setUser(foundUser);
     }
   }, []);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const user = { username, password };
 
-    // Send the username and password to the server
     let foundUser;
     try {
       const res = await checkUserExists(username, password);
-      if (res)
-        foundUser = res.data;
+      if (res) foundUser = res.data;
     } catch (e) {
-      alert(e.response.data);
+      alert((e as Error).message);
     }
-    // set the state of the user
 
-    //const foundUser = DB.filter(u => u.username === user.username && u.password === user.password);
     if (foundUser) {
       setUser(foundUser);
-      // store the user in localStorage
-      localStorage.setItem('user', JSON.stringify(foundUser));//response.data)
-      console.log(foundUser);//response.data)
+      localStorage.setItem('user', JSON.stringify(foundUser));
       await handleNavigation(foundUser);
     }
   };
-  const navigate = useNavigate()
 
-  const handleNavigation = async (user) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = async (user: User) => {
     switch (user.type) {
-      case 'Manager':
+      case UserType.Manager:
         navigate('/manager');
         break;
       default:
         navigate('/');
         break;
     }
-  }
+  };
 
-  // if there's a user show the message below
   if (user) {
     return (
       <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 64px)' }}>
         <div className="fixed-top d-flex align-items-center justify-content-between bg-primary text-white p-2">
           <div>{user.name} is logged in</div>
-          <button className="btn btn-light" onClick={handleLogout}>Logout</button>
+          <button className="btn btn-light" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
         <div className="mt-3 pt-5">
           <Routes>
@@ -83,7 +80,7 @@ const App = () => {
       </div>
     );
   }
-  // if there's no user, show the login form
+
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
       <div className="col-md-3">
