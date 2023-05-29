@@ -80,7 +80,7 @@ const mocks: MockApiCall[] = [
     },
     {
         method: methodTypes.Get,
-        url: '/GetCoursesOfTeacher',
+        url: '/GetCoursesForTeacher',
         response: {
             status: 200,
             data: [

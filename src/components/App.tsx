@@ -14,11 +14,10 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | undefined>();
 
   const handleLogout = () => {
-    setUser(undefined);
     setUsername('');
     setPassword('');
     localStorage.clear();
-    navigate('/');
+    setUser(undefined);
   };
 
   useEffect(() => {
@@ -28,6 +27,11 @@ const App: React.FC = () => {
       setUser(foundUser);
     }
   }, []);
+
+  // every time the user changes navigate it to the relevant page.
+  useEffect(() => {
+    handleNavigation();
+  }, [user])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,15 +46,18 @@ const App: React.FC = () => {
     }
 
     if (foundUser) {
-      setUser(foundUser);
       localStorage.setItem('user', JSON.stringify(foundUser));
-      await handleNavigation(foundUser);
+      setUser(foundUser);
     }
   };
 
   const navigate = useNavigate();
 
-  const handleNavigation = async (user: User) => {
+  const handleNavigation = () => {
+    if (!user) {
+      navigate('/');
+      return;
+    }
     switch (user.type) {
       case UserType.Manager:
         navigate('/manager');

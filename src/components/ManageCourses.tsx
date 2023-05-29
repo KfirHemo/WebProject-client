@@ -2,30 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { Table, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import ConfirmModal from './ConfirmModal';
 import PaginationComponent from './PaginationComponent';
-import { getCoursesOfTeacher, removeCourse, getUsers } from '../data/manager';
+import { managerDataOperations } from '../data/manager';
 import '../styles/ManageCourses.css';
 import Select from 'react-select';
-import { Teacher, Course, UserType } from '../data/types';
+import { User, Course, UserType } from '../data/types';
 
 const ManageCourses = () => {
-    const [teachers, setTeachers] = useState<Teacher[]>([]);
-    const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+    const [teachers, setTeachers] = useState<User[]>([]);
+    const [selectedTeacher, setSelectedTeacher] = useState<User | null>(null);
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [coursesPerPage, setCoursesPerPage] = useState<number>(10);
-    const [courseToRemove, setCourseToRemove] = useState<Course>({ id: '', name: '', code: '' });
+    const [courseToRemove, setCourseToRemove] = useState<Course>({ id: 0, name: '' });
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchTeachers = async () => {
             try {
-                const fetchedTeachers = await getUsers(UserType.Teacher);
+                const fetchedTeachers = await managerDataOperations.getUsers(UserType.Teacher);
                 if (!fetchedTeachers || fetchedTeachers.status !== 200 || !fetchedTeachers.data) {
                     console.error('Error when getting teachers.');
                     return;
                 }
 
-                setTeachers(fetchedTeachers.data);
+                //.filter is for testing because mock server doesn't filter user type
+                setTeachers(fetchedTeachers.data.filter(u => u.type === UserType.Teacher));
             } catch (error) {
                 console.error(`Error when getting teachers: ${error}`);
             }
@@ -38,7 +39,7 @@ const ManageCourses = () => {
         const fetchCourses = async () => {
             if (selectedTeacher) {
                 try {
-                    const fetchedCourses = await getCoursesOfTeacher(selectedTeacher.id);
+                    const fetchedCourses = await managerDataOperations.getCoursesOfTeacher(selectedTeacher);
                     if (!fetchedCourses || fetchedCourses.status !== 200 || !fetchedCourses.data) {
                         console.error('Error when getting courses.');
                         return;
@@ -55,7 +56,7 @@ const ManageCourses = () => {
         fetchCourses();
     }, [selectedTeacher]);
 
-    const handleTeacherChange = (selectedOption: Teacher | null) => {
+    const handleTeacherChange = (selectedOption: User | null) => {
         setSelectedTeacher(selectedOption);
     };
 
@@ -66,7 +67,7 @@ const ManageCourses = () => {
         setShowDeleteModal(false);
 
         try {
-            await removeCourse(courseToRemove);
+            await managerDataOperations.removeCourse(courseToRemove);
         } catch (error) {
             console.error(`Error when removing course: ${error}`);
         }
@@ -92,7 +93,7 @@ const ManageCourses = () => {
                                 value={selectedTeacher}
                                 onChange={handleTeacherChange}
                                 getOptionLabel={(option) => option.name}
-                                getOptionValue={(option) => option.id}
+                                getOptionValue={(option) => option.id.toString()}
                                 placeholder="Select Teacher"
                                 isClearable
                             />
@@ -114,8 +115,8 @@ const ManageCourses = () => {
                                 .slice((currentPage - 1) * coursesPerPage, currentPage * coursesPerPage)
                                 .map((course, index) => (
                                     <tr key={index}>
+                                        <td>{course.id}</td>
                                         <td>{course.name}</td>
-                                        <td>{course.code}</td>
                                         <td>
                                             <Button
                                                 variant="danger"

@@ -2,7 +2,7 @@ import React, { useEffect, useState, ChangeEvent, ChangeEventHandler } from 'rea
 import { Table, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import ConfirmModal from './ConfirmModal';
 import PaginationComponent from './PaginationComponent';
-import { getUsers, addUser, removeUser } from '../data/manager';
+import { managerDataOperations } from '../data/manager';
 import '../styles/ManageUsers.css';
 import { User, UserType } from '../data/types';
 
@@ -12,14 +12,14 @@ const ManageUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage, setUsersPerPage] = useState(10);
 
-  const [newUser, setNewUser] = useState<User>({ name: '', type: UserType.Student, password: '' });
+  const [newUser, setNewUser] = useState<User>({ id: 0, name: '', type: UserType.Student, password: '' });
   const [userToRemove, setUserToRemove] = useState<User>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [filter, setFilter] = useState({ name: '', type: '' });
 
   const fetchUsers = async () => {
     try {
-      const fetchedUsers = await getUsers(undefined);
+      const fetchedUsers = await managerDataOperations.getUsers(undefined);
       if (!fetchedUsers || fetchedUsers?.status !== 200 || !fetchedUsers?.data) {
         console.error(`Error when getting users.`);
         return [];
@@ -56,14 +56,14 @@ const ManageUsers = () => {
         return;
       }
       console.log('Add User:', newUser);
-      const res = await addUser(newUser);
-      if (!res || res?.status !== 200 || !res?.data?.id) {
+      const res = await managerDataOperations.addUser(newUser);
+      if (!res || res.status !== 200 || !res.data) {
         console.error(`Error when adding user: ${newUser?.name}`);
         return;
       }
       const updatedUsers = await fetchUsers();
       setUsers(updatedUsers);
-      setNewUser({ name: '', type: UserType.Student, password: '' });
+      setNewUser({ id: 0, name: '', type: UserType.Student, password: '' });
     } catch (error) {
       console.error('An error occurred:', error);
     }
@@ -75,8 +75,8 @@ const ManageUsers = () => {
       console.log('Remove User:', userToRemove);
       if (!userToRemove)
         return undefined;
-      const res = await removeUser(userToRemove);
-      if (!res || res?.status !== 200 || !res?.data.id) {
+      const res = await managerDataOperations.removeUser(userToRemove);
+      if (!res || res.status !== 200 || !res.data) {
         console.error(`Error when removing user: ${userToRemove.name}`);
         return;
       }
