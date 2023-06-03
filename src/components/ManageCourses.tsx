@@ -8,8 +8,8 @@ import Select from 'react-select';
 import { User, Course, UserType } from '../data/types';
 
 const ManageCourses = () => {
-    const [teachers, setTeachers] = useState<User[]>([]);
-    const [selectedTeacher, setSelectedTeacher] = useState<User | null>(null);
+    const [users, setUsers] = useState<User[]>([]);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [coursesPerPage, setCoursesPerPage] = useState<number>(10);
@@ -17,29 +17,29 @@ const ManageCourses = () => {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchTeachers = async () => {
+        const fetchUsers = async () => {
             try {
-                const fetchedTeachers = await managerDataOperations.getUsers(UserType.Teacher);
+                const fetchedTeachers = await managerDataOperations.getUsers(undefined);
                 if (!fetchedTeachers || fetchedTeachers.status !== 200 || !fetchedTeachers.data) {
-                    console.error('Error when getting teachers.');
+                    console.error('Error when getting users.');
                     return;
                 }
 
                 //.filter is for testing because mock server doesn't filter user type
-                setTeachers(fetchedTeachers.data.filter(u => u.type === UserType.Teacher));
+                setUsers(fetchedTeachers.data.filter(u => u.type !== UserType.Manager));
             } catch (error) {
-                console.error(`Error when getting teachers: ${error}`);
+                console.error(`Error when getting users: ${error}`);
             }
         };
 
-        fetchTeachers();
+        fetchUsers();
     }, []);
 
     useEffect(() => {
         const fetchCourses = async () => {
-            if (selectedTeacher) {
+            if (selectedUser) {
                 try {
-                    const fetchedCourses = await managerDataOperations.getCoursesOfTeacher(selectedTeacher);
+                    const fetchedCourses = await managerDataOperations.getCoursesOfTeacher(selectedUser);
                     if (!fetchedCourses || fetchedCourses.status !== 200 || !fetchedCourses.data) {
                         console.error('Error when getting courses.');
                         return;
@@ -54,10 +54,10 @@ const ManageCourses = () => {
         };
 
         fetchCourses();
-    }, [selectedTeacher]);
+    }, [selectedUser]);
 
-    const handleTeacherChange = (selectedOption: User | null) => {
-        setSelectedTeacher(selectedOption);
+    const handleUserChange = (selectedOption: User | null) => {
+        setSelectedUser(selectedOption);
     };
 
     const handleRemoveCourse = async () => {
@@ -78,6 +78,20 @@ const ManageCourses = () => {
         setShowDeleteModal(true);
     };
 
+    const loggedInUser = localStorage.getItem("user");
+    // if user is not logged in and tried to navigate to this page, don't display
+    if (!loggedInUser) {
+        return null;
+    }
+    const user = JSON.parse(loggedInUser);
+    if (user.type !== UserType.Manager) {
+        return (
+            <div className="access-denied">
+                <h1>Access Denied</h1>
+                <p>Sorry, you do not have permission to access this page.</p>
+            </div>
+        );
+    }
     return (
         <div className="container d-flex flex-column">
             <Container fluid>
@@ -85,16 +99,15 @@ const ManageCourses = () => {
                 <hr className="section-separator" />
 
                 <div className="col-md-5 mb-3">
-                    <Form.Label>Select Teacher</Form.Label>
                     <Row>
                         <Col>
                             <Select
-                                options={teachers}
-                                value={selectedTeacher}
-                                onChange={handleTeacherChange}
+                                options={users}
+                                value={selectedUser}
+                                onChange={handleUserChange}
                                 getOptionLabel={(option) => option.name}
                                 getOptionValue={(option) => option.id.toString()}
-                                placeholder="Select Teacher"
+                                placeholder="Select Teacher or Student"
                                 isClearable
                             />
                         </Col>
@@ -105,8 +118,8 @@ const ManageCourses = () => {
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>Course Name</th>
                                 <th>Course Code</th>
+                                <th>Course Name</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
