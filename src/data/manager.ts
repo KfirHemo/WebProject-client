@@ -11,12 +11,12 @@ interface ManagerDataOperations {
   getUsers(userType?: UserType): AxiosPromise<User[]>;
   addUser(user: User): AxiosPromise<number>;
   removeUser(user: User): AxiosPromise<number>;
-  addCourse(course: Course): AxiosPromise<number>;
-  removeCourse(course: Course): AxiosPromise<number>;
-  addCourseForTeacher(teacherName: string, courseName: string): AxiosPromise<void>;
-  removeTeacherFromCourse(teacherName: string, courseName: string): AxiosPromise<void>;
+  addCourse(courseName: string): AxiosPromise<number>;
+  removeCourse(courseId: number): AxiosPromise<number>;
+  addCourseForTeacher(userId: number, courseId: number): AxiosPromise<void>;
+  removeTeacherFromCourse(userId: number, courseId: number): AxiosPromise<void>;
   getCourses(): AxiosPromise<Course[]>;
-  getCoursesOfTeacher(teacher: User): AxiosPromise<Course[]>;
+  getCoursesOfTeacher(userId: Number): AxiosPromise<Course[]>;
 }
 
 export const managerDataOperations: ManagerDataOperations = {
@@ -36,7 +36,7 @@ export const managerDataOperations: ManagerDataOperations = {
     if (!name || !password || !type) return Promise.reject(null);
     try {
       const apiService = await getApiService();
-      return apiService.post('/AddUser', { params: { name, password, type } });
+      return apiService.post('/AddUser', { params: { username: name,password: password,type: type } });
     } catch (e: any) {
       console.error(e);
       return e;
@@ -45,48 +45,49 @@ export const managerDataOperations: ManagerDataOperations = {
 
   removeUser: async (user: User): AxiosPromise<number> => {
     try {
+      const { id } = user;
       const apiService = await getApiService();
-      return apiService.delete('/RemoveUser', { params: { name: user.name } });
+      return apiService.delete('/RemoveUser', { params: {userId: id } });
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  addCourse: async (course: Course): AxiosPromise<number> => {
+  addCourse: async (courseName: string): AxiosPromise<number> => {
     try {
       const apiService = await getApiService();
-      return apiService.post('/AddCourse', course);
+      return apiService.post('/AddCourse', { params: { courseName } });
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  removeCourse: async (course: Course): AxiosPromise<number> => {
+  removeCourse: async (courseId: number): AxiosPromise<number> => {
     try {
       const apiService = await getApiService();
-      return apiService.delete('/RemoveCourse', { params: { courseName: course.name } });
+      return apiService.delete('/RemoveCourse', { params: { courseId } });
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  addCourseForTeacher: async (teacherName: string, courseName: string): AxiosPromise<void> => {
+  addCourseForTeacher: async (userId: number, courseId: number): AxiosPromise<void> => {
     try {
       const apiService = await getApiService();
-      return apiService.post('/AddCourseForTeacher', { teacherName, courseName });
+      return apiService.post('/AddCourseForTeacher', { userId, courseId });
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  removeTeacherFromCourse: async (teacherName: string, courseName: string): AxiosPromise<void> => {
+  removeTeacherFromCourse: async (userId: number, courseId: number): AxiosPromise<void> => {
     try {
       const apiService = await getApiService();
-      return apiService.delete('/RemoveTeacherFromCourse', { params: { teacherName, courseName } });
+      return apiService.delete('/RemoveTeacherFromCourse', { params: { userId, courseId } });
     } catch (e: any) {
       console.error(e);
       return e;
@@ -103,7 +104,7 @@ export const managerDataOperations: ManagerDataOperations = {
     }
   },
 
-  getCoursesOfTeacher: async (teacher: User): AxiosPromise<Course[]> => {
-    return teacherDataOperations.getCoursesOfTeacher(teacher);
+  getCoursesOfTeacher: async (userId: Number): AxiosPromise<Course[]> => {
+    return teacherDataOperations.getCoursesOfTeacher(userId);
   },
 };

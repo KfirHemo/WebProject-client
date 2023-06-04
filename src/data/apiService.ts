@@ -20,8 +20,8 @@ if (config.TEST_MODE) {
         status: 200,
         data: {
           id: 1,
-          name: 'Test User',
-          type: UserType.Manager,
+          name: 'Test Teacher',
+          type: UserType.Teacher,
           password: '1234',
         },
       },

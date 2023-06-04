@@ -1,41 +1,39 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import ManagerPage from './ManagerPage';
+
 import ManageUsers from './ManageUsers';
 import ManageCourses from './ManageCourses';
 import StudentPage from './StudentPage';
 import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
-import { User, UserType } from '../data/types';
+import { User } from '../data/types';
+import { navData } from '../lib/navData';
+import TeacherPage from './TeacherPage';
 import GetCoursesOfStudent from './GetCoursesOfStudent';
-
 const App: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [user, setUser] = useState<User | undefined>();
+  const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
 
   const handleLogout = () => {
     setUsername('');
     setPassword('');
     localStorage.clear();
-    setUser(undefined);
+    setLoggedInUser(undefined);
+    navigate('/');
   };
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser) as User;
-      setUser(foundUser);
+      setLoggedInUser(foundUser);
     }
   }, []);
 
-  // every time the user changes navigate it to the relevant page.
-  useEffect(() => {
-    handleNavigation();
-  }, [user])
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const user = { username, password };
 
@@ -49,7 +47,8 @@ const App: React.FC = () => {
 
     if (foundUser) {
       localStorage.setItem('user', JSON.stringify(foundUser));
-      setUser(foundUser);
+      setLoggedInUser(foundUser);
+      navigate('/');
     }
   };
 
@@ -64,9 +63,6 @@ const App: React.FC = () => {
       case UserType.Manager:
         navigate('/manager');
         break;
-      case UserType.Student: // Add a case for the student type
-        navigate('/student');
-        break;
       default:
         navigate('/');
         break;
@@ -75,31 +71,45 @@ const App: React.FC = () => {
 
   if (user) {
     return (
-      <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 64px)' }}>
-        <div className="fixed-top d-flex align-items-center justify-content-between bg-primary text-white p-2">
-          <div>{user.name} is logged in</div>
-          <button className="btn btn-light" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-        <div className="mt-3 pt-5">
-          <Routes>
-            <Route path="/manager" element={<ManagerPage />} />
-            <Route path="/users" element={<ManageUsers />} />
-            <Route path="/courses" element={<ManageCourses />} />
+      <>
+        <Navbar collapseOnSelect style={{ position: "sticky" }} expand="md" bg="primary" variant="dark" fixed="top">
+          <Container>
+            <Navbar.Brand href="#home">Logo</Navbar.Brand>
+            <span className="text-light ml-2">Welcome {loggedInUser.name}</span>
+
+            <Navbar.Toggle aria-controls="navbarScroll" />
+
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="ms-auto" navbarScroll>
+                {navData
+                  .filter((nav) => nav.userType.includes(loggedInUser.type))
+                  .map((nav) => (
+                    <Nav.Link key={nav.link} href={nav.link}>{nav.text}</Nav.Link>
+                  ))}
+                <Button variant="primary" onClick={handleLogout}>Logout</Button>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        <Routes>
+          <Route path="/" element={<></>} />
+          <Route path="/users" element={<ManageUsers />} />
+          <Route path="/courses" element={<ManageCourses />} />
+          <Route path="/grades" element={<TeacherPage />} />
             <Route path="/student" element={<StudentPage />} />
             <Route path="/GetCoursesOfStudent" element={<GetCoursesOfStudent />} />
-          </Routes>
-        </div>
-      </div>
+        </Routes>
+      </>
+
     );
   }
 
   return (
-    <div className="container d-flex align-items-center justify-content-center vh-100">
+    <div className="d-flex align-items-center justify-content-center vh-100">
       <div className="col-md-3">
         <h1 className="text-center">Login</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div>
             <label htmlFor="username">Username:</label>
             <input

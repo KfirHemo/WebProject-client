@@ -98,7 +98,20 @@ const ManageUsers = () => {
     setFilter({ ...filter, [name]: value });
   };
 
-
+  const loggedInUser = localStorage.getItem("user");
+  // if user is not logged in and tried to navigate to this page, don't display
+  if (!loggedInUser) {
+    return null;
+  }
+  const user = JSON.parse(loggedInUser);
+  if (user.type !== UserType.Manager) {
+    return (
+      <div className="access-denied">
+        <h1>Access Denied</h1>
+        <p>Sorry, you do not have permission to access this page.</p>
+      </div>
+    );
+  }
   return (
     <div className="container d-flex flex-column">
       <Container fluid>
