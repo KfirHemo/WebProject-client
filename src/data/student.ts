@@ -1,24 +1,24 @@
 import { AxiosPromise } from 'axios';
 import { getApiService } from './apiService';
-import { Course, Grade } from './types';
+import { UserType, User, Course } from './types';
 
 interface StudentDataOperations {
-    getCoursesOfStudent(username: string): AxiosPromise<Course[]>;
-    getGradesOfStudentInCourse(username: string, courseName: string): AxiosPromise<Grade[]>;
+    getCoursesOfStudent(userId: number): AxiosPromise<Course[]>;
+    getGradesOfStudentInCourse(username: string, courseName: string): AxiosPromise<Course[]>;
 }
 
 export const studentDataOperations: StudentDataOperations = {
-    getCoursesOfStudent: async (username: string): AxiosPromise<Course[]> => {
+    getCoursesOfStudent: async (userId: number): AxiosPromise<Course[]> => {
         try {
             const apiService = await getApiService();
-            return apiService.get('/GetCoursesOfStudent', { params: { username } });
+            return apiService.get('/GetCoursesOfStudent', { params: { userId  } });
         } catch (e: any) {
             console.error(e);
             return e;
         }
     },
 
-    getGradesOfStudentInCourse: async (username: string, courseName: string): AxiosPromise<Grade[]> => {
+    getGradesOfStudentInCourse: async (username: string, courseName: string): AxiosPromise<Course[]> => {
         try {
             const apiService = await getApiService();
             return apiService.get('/GetGradesOfStudentInCourse', { params: { username, courseName } });

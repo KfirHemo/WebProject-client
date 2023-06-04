@@ -4,9 +4,11 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import ManagerPage from './ManagerPage';
 import ManageUsers from './ManageUsers';
 import ManageCourses from './ManageCourses';
+import StudentPage from './StudentPage';
 import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
 import { User, UserType } from '../data/types';
+import GetCoursesOfStudent from './GetCoursesOfStudent';
 
 const App: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -62,6 +64,9 @@ const App: React.FC = () => {
       case UserType.Manager:
         navigate('/manager');
         break;
+      case UserType.Student: // Add a case for the student type
+        navigate('/student');
+        break;
       default:
         navigate('/');
         break;
@@ -82,6 +87,8 @@ const App: React.FC = () => {
             <Route path="/manager" element={<ManagerPage />} />
             <Route path="/users" element={<ManageUsers />} />
             <Route path="/courses" element={<ManageCourses />} />
+            <Route path="/student" element={<StudentPage />} />
+            <Route path="/GetCoursesOfStudent" element={<GetCoursesOfStudent />} />
           </Routes>
         </div>
       </div>
