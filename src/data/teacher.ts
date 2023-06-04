@@ -38,7 +38,7 @@ export const teacherDataOperations: TeacherDataOperations = {
     addGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): AxiosPromise<void> => {
         try {
             const apiService: AxiosInstance = await getApiService();
-            return apiService.post('/AddGradeForStudent', { userId, courseId, grade, description });
+            return apiService.post('/AddGradeForStudent', { params: {userId: userId,courseId: courseId,grade: grade,description: description} });
         } catch (error: any) {
             console.error(error);
             return Promise.reject(error);
@@ -48,7 +48,7 @@ export const teacherDataOperations: TeacherDataOperations = {
     updateGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): AxiosPromise<void> => {
         try {
             const apiService: AxiosInstance = await getApiService();
-            return apiService.post('/UpdateGradeForStudent', { userId, courseId, grade, description });
+            return apiService.post('/UpdateGradeForStudent', { params: {userId: userId,courseId: courseId,grade: grade,description: description} });
         } catch (error: any) {
             console.error(error);
             return Promise.reject(error);

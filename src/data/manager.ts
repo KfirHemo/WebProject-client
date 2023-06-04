@@ -36,7 +36,7 @@ export const managerDataOperations: ManagerDataOperations = {
     if (!name || !password || !type) return Promise.reject(null);
     try {
       const apiService = await getApiService();
-      return apiService.post('/AddUser', { params: { name, password, type } });
+      return apiService.post('/AddUser', { params: { username: name,password: password,type: type } });
     } catch (e: any) {
       console.error(e);
       return e;
@@ -47,7 +47,7 @@ export const managerDataOperations: ManagerDataOperations = {
     try {
       const { id } = user;
       const apiService = await getApiService();
-      return apiService.delete('/RemoveUser', { params: { id } });
+      return apiService.delete('/RemoveUser', { params: {userId: id } });
     } catch (e: any) {
       console.error(e);
       return e;
