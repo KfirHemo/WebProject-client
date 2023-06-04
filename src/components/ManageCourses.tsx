@@ -39,7 +39,7 @@ const ManageCourses = () => {
         const fetchCourses = async () => {
             if (selectedUser) {
                 try {
-                    const fetchedCourses = await managerDataOperations.getCoursesOfTeacher(selectedUser);
+                    const fetchedCourses = await managerDataOperations.getCoursesOfTeacher(selectedUser.id);
                     if (!fetchedCourses || fetchedCourses.status !== 200 || !fetchedCourses.data) {
                         console.error('Error when getting courses.');
                         return;
@@ -67,7 +67,7 @@ const ManageCourses = () => {
         setShowDeleteModal(false);
 
         try {
-            await managerDataOperations.removeCourse(courseToRemove);
+            await managerDataOperations.removeCourse(courseToRemove.id);
         } catch (error) {
             console.error(`Error when removing course: ${error}`);
         }

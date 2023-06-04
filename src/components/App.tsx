@@ -7,8 +7,9 @@ import ManageUsers from './ManageUsers';
 import ManageCourses from './ManageCourses';
 import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
-import { User, UserType } from '../data/types';
+import { User } from '../data/types';
 import { navData } from '../lib/navData';
+import TeacherPage from './TeacherPage';
 const App: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -74,18 +75,19 @@ const App: React.FC = () => {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-          <Routes>
+        <Routes>
           <Route path="/" element={<></>} />
-            <Route path="/users" element={<ManageUsers />} />
-            <Route path="/courses" element={<ManageCourses />} />
-          </Routes>
+          <Route path="/users" element={<ManageUsers />} />
+          <Route path="/courses" element={<ManageCourses />} />
+          <Route path="/grades" element={<TeacherPage />} />
+        </Routes>
       </>
 
     );
   }
 
   return (
-    <div className="container d-flex align-items-center justify-content-center vh-100">
+    <div className="d-flex align-items-center justify-content-center vh-100">
       <div className="col-md-3">
         <h1 className="text-center">Login</h1>
         <form onSubmit={handleLogin}>
