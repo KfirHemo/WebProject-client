@@ -32,13 +32,8 @@ const TeacherPage: React.FC = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             if (!loggedInTeacher) return;
-            try {
-                const response = await teacherDataOperations.getCoursesOfTeacher(loggedInTeacher.id);
-                const courses = response.data;
-                setCourses(courses);
-            } catch (error) {
-                console.error(error);
-            }
+            teacherDataOperations.getCoursesOfTeacher(loggedInTeacher.id).then(courses => setCourses(courses));
+
         };
         fetchCourses();
     }, [loggedInTeacher]);
@@ -62,9 +57,9 @@ const TeacherPage: React.FC = () => {
 
     const fetchStudentsInCourse = async (teacher: User, course: Course) => {
         try {
-            const response = await teacherDataOperations.getStudentsInCourse(teacher.id, course.id);
-            const students = response.data;
-            setStudentsInCourse(students);
+            teacherDataOperations.getStudentsInCourse(teacher.id, course.id)
+                .then(students => setStudentsInCourse(students));
+
             setSelectedStudent({ id: -1, name: '', type: UserType.Student, password: '' });
             setGrades([]);
             setViewMode('students');
@@ -77,9 +72,9 @@ const TeacherPage: React.FC = () => {
         if (!selectedCourse)
             return;
         try {
-            const response = await studentDataOperations.getGradesOfStudentInCourse(student.id, selectedCourse?.id);
-            const grades = response.data;
-            setGrades(grades);
+            studentDataOperations.getGradesOfStudentInCourse(student.id, selectedCourse?.id)
+                .then(grades => setGrades(grades));
+
             setViewMode('grades');
         } catch (error) {
             console.error(error);

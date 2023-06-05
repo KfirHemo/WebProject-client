@@ -17,26 +17,9 @@ const ManageUsers = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [filter, setFilter] = useState({ name: '', type: '' });
 
-  const fetchUsers = async () => {
-    try {
-      const fetchedUsers = await managerDataOperations.getUsers(undefined);
-      if (!fetchedUsers || fetchedUsers?.status !== 200 || !fetchedUsers?.data) {
-        console.error(`Error when getting users.`);
-        return [];
-      }
-      return fetchedUsers.data;
-    } catch (e) {
-      console.error(`Error when getting users: ${e}`);
-      return [];
-    }
-  };
 
   useEffect(() => {
-    const getInitialUsers = async () => {
-      const fetchedUsers = await fetchUsers();
-      setUsers(fetchedUsers);
-    };
-    getInitialUsers();
+    managerDataOperations.getUsers(undefined).then(fetchedUsers => setUsers(fetchedUsers));
   }, []);
 
   useEffect(() => {
@@ -56,13 +39,8 @@ const ManageUsers = () => {
         return;
       }
       console.log('Add User:', newUser);
-      const res = await managerDataOperations.addUser(newUser);
-      if (!res || res.status !== 200 || !res.data) {
-        console.error(`Error when adding user: ${newUser?.name}`);
-        return;
-      }
-      const updatedUsers = await fetchUsers();
-      setUsers(updatedUsers);
+      await managerDataOperations.addUser(newUser);
+      managerDataOperations.getUsers(undefined).then(fetchedUsers => setUsers(fetchedUsers));
       setNewUser({ id: 0, name: '', type: UserType.Student, password: '' });
     } catch (error) {
       console.error('An error occurred:', error);
@@ -75,13 +53,8 @@ const ManageUsers = () => {
       console.log('Remove User:', userToRemove);
       if (!userToRemove)
         return undefined;
-      const res = await managerDataOperations.removeUser(userToRemove);
-      if (!res || res.status !== 200 || !res.data) {
-        console.error(`Error when removing user: ${userToRemove.name}`);
-        return;
-      }
-      const updatedUsers = await fetchUsers();
-      setUsers(updatedUsers);
+      await managerDataOperations.removeUser(userToRemove);
+      managerDataOperations.getUsers(undefined).then(fetchedUsers => setUsers(fetchedUsers));
       setShowDeleteModal(false);
     } catch (error) {
       console.error('An error occurred:', error);
