@@ -2,7 +2,7 @@ import axios from "axios";
 import { initMockApiCalls } from "../tests/data/apiServiceMocks";
 
 //Set this to true to enable test mode, meaning use mock server connection instead of real.
-const TEST_MODE = true;
+const TEST_MODE = false;
 if (TEST_MODE) {
     initMockApiCalls();
 }

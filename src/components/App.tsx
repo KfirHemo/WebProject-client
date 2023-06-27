@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
+
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ import { User } from '../data/types';
 import { navData } from '../lib/navData';
 import TeacherPage from './TeacherPage';
 import apiService from '../data/apiService';
+import StudentPage from './StudentPage';
 
 const App: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -80,7 +82,6 @@ const App: React.FC = () => {
           <Route path="/courses" element={<ManageCourses />} />
           <Route path="/grades" element={<TeacherPage />} />
             <Route path="/student" element={<StudentPage />} />
-            <Route path="/GetCoursesOfStudent" element={<GetCoursesOfStudent />} />
         </Routes>
       </>
 

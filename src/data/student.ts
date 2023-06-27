@@ -19,8 +19,8 @@ export const studentDataOperations: StudentDataOperations = {
 
     getGradesOfStudentInCourse: async (userId: number, courseId: number): Promise<Grade[]> => {
         try {
-            const { data } = await apiService.get('/GetGradesOfStudentInCourse', { params: { userId, courseId } });
-            return data;
+            const res = await apiService.get('/GetGradesOfStudentInCourse', { params: { userId, courseId } });
+            return res.data;
         } catch (e: any) {
             console.error(e);
             return e;

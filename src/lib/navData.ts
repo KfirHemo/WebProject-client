@@ -26,4 +26,9 @@ export const navData = [
         text: "Manage Courses",
         link: "/courses"
     },
+    {
+        userType: [UserType.Student],
+        text: "Courses",
+        link: "/student"
+    },
 ]
