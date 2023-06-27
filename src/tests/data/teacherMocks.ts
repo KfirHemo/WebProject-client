@@ -1,8 +1,8 @@
-import { MockApiCall, addMockApiCalls, methodTypes } from "./apiServiceMocks";
+import { MockApiCall } from "./apiServiceMocks";
 
-const mocks: MockApiCall[] = [
+export const teacherMocks: MockApiCall[] = [
     {
-        method: methodTypes.Get,
+        method: 'Get',
         url: '/GetStudentsInCourse',
         response: {
             status: 200,
@@ -23,7 +23,7 @@ const mocks: MockApiCall[] = [
         },
     },
     {
-        method: methodTypes.Post,
+        method: 'Post',
         url: '/AddGradeForStudent',
         response: {
             status: 200,
@@ -31,7 +31,7 @@ const mocks: MockApiCall[] = [
         },
     },
     {
-        method: methodTypes.Delete,
+        method: 'Delete',
         url: '/UpdateGradeForStudent',
         response: {
             status: 200,
@@ -39,7 +39,7 @@ const mocks: MockApiCall[] = [
         },
     },
     {
-        method: methodTypes.Post,
+        method: 'Post',
         url: '/AddCourseForTeacher',
         response: {
             status: 200,
@@ -47,7 +47,7 @@ const mocks: MockApiCall[] = [
         },
     },
     {
-        method: methodTypes.Delete,
+        method: 'Delete',
         url: '/RemoveGradeForStudent',
         response: {
             status: 200,
@@ -55,7 +55,7 @@ const mocks: MockApiCall[] = [
         },
     },
     {
-        method: methodTypes.Get,
+        method: 'Get',
         url: '/GetCoursesForTeacher',
         response: {
             status: 200,
@@ -67,7 +67,3 @@ const mocks: MockApiCall[] = [
         },
     },
 ];
-
-export const setupMocks = (): void => {
-    addMockApiCalls(mocks);
-};

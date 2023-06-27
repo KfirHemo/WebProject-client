@@ -17,43 +17,16 @@ const ManageCourses = () => {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const fetchedTeachers = await managerDataOperations.getUsers(undefined);
-                if (!fetchedTeachers || fetchedTeachers.status !== 200 || !fetchedTeachers.data) {
-                    console.error('Error when getting users.');
-                    return;
-                }
+        managerDataOperations.getUsers(undefined).then(fetchedTeachers => setUsers(fetchedTeachers))
 
-                //.filter is for testing because mock server doesn't filter user type
-                setUsers(fetchedTeachers.data.filter(u => u.type !== UserType.Manager));
-            } catch (error) {
-                console.error(`Error when getting users: ${error}`);
-            }
-        };
 
-        fetchUsers();
     }, []);
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            if (selectedUser) {
-                try {
-                    const fetchedCourses = await managerDataOperations.getCoursesOfTeacher(selectedUser.id);
-                    if (!fetchedCourses || fetchedCourses.status !== 200 || !fetchedCourses.data) {
-                        console.error('Error when getting courses.');
-                        return;
-                    }
-                    setCourses(fetchedCourses.data);
-                } catch (error) {
-                    console.error(`Error when getting courses: ${error}`);
-                }
-            } else {
-                setCourses([]);
-            }
-        };
+        if (!selectedUser)
+            return;
+        managerDataOperations.getCoursesOfTeacher(selectedUser.id).then(fetchedCourses => setCourses(fetchedCourses))
 
-        fetchCourses();
     }, [selectedUser]);
 
     const handleUserChange = (selectedOption: User | null) => {

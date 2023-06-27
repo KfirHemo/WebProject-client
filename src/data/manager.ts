@@ -1,110 +1,105 @@
-import { AxiosPromise } from 'axios';
-import { getApiService } from './apiService';
 import { UserType, User, Course } from './types';
-import *  as config from './config';
-import { setupMocks } from '../tests/data/managerMocks';
 import { teacherDataOperations } from './teacher';
-if (config.TEST_MODE) 
-  setupMocks();
+import apiService from './apiService';
 
 interface ManagerDataOperations {
-  getUsers(userType?: UserType): AxiosPromise<User[]>;
-  addUser(user: User): AxiosPromise<number>;
-  removeUser(user: User): AxiosPromise<number>;
-  addCourse(courseName: string): AxiosPromise<number>;
-  removeCourse(courseId: number): AxiosPromise<number>;
-  addCourseForTeacher(userId: number, courseId: number): AxiosPromise<void>;
-  removeTeacherFromCourse(userId: number, courseId: number): AxiosPromise<void>;
-  getCourses(): AxiosPromise<Course[]>;
-  getCoursesOfTeacher(userId: Number): AxiosPromise<Course[]>;
+  getUsers(userType?: UserType): Promise<User[]>;
+  addUser(user: User): Promise<number>;
+  removeUser(user: User): Promise<number>;
+  addCourse(courseName: string): Promise<number>;
+  removeCourse(courseId: number): Promise<number>;
+  addCourseForTeacher(userId: number, courseId: number): Promise<any>;
+  removeTeacherFromCourse(userId: number, courseId: number): Promise<any>;
+  getCourses(): Promise<Course[]>;
+  getCoursesOfTeacher(userId: Number): Promise<Course[]>;
 }
 
 export const managerDataOperations: ManagerDataOperations = {
-  getUsers: async (userType?: UserType): AxiosPromise<User[]> => {
+  getUsers: async (userType?: UserType): Promise<User[]> => {
     const type = userType || '';
     try {
-      const apiService = await getApiService();
-      return apiService.get('/GetUsers', { params: { type } });
+      const { data } = await apiService.get('/GetUsers', { params: { type } });
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  addUser: async (user: User): AxiosPromise<number> => {
+  addUser: async (user: User): Promise<number> => {
     const { name, password, type } = user;
     if (!name || !password || !type) return Promise.reject(null);
     try {
-      const apiService = await getApiService();
-      return apiService.post('/AddUser', { params: { username: name,password: password,type: type } });
+      const { data } = await apiService.post('/AddUser', { params: { username: name, password: password, type: type } });
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  removeUser: async (user: User): AxiosPromise<number> => {
+  removeUser: async (user: User): Promise<number> => {
     try {
       const { id } = user;
-      const apiService = await getApiService();
-      return apiService.delete('/RemoveUser', { params: {userId: id } });
+      const { data } = await apiService.delete('/RemoveUser', { params: { userId: id } });
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  addCourse: async (courseName: string): AxiosPromise<number> => {
+  addCourse: async (courseName: string): Promise<number> => {
     try {
-      const apiService = await getApiService();
-      return apiService.post('/AddCourse', { params: { courseName } });
+      const { data } = await apiService.post('/AddCourse', { params: { courseName } });
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  removeCourse: async (courseId: number): AxiosPromise<number> => {
+  removeCourse: async (courseId: number): Promise<number> => {
     try {
-      const apiService = await getApiService();
-      return apiService.delete('/RemoveCourse', { params: { courseId } });
+      const { data } = await apiService.delete('/RemoveCourse', { params: { courseId } });
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  addCourseForTeacher: async (userId: number, courseId: number): AxiosPromise<void> => {
+  addCourseForTeacher: async (userId: number, courseId: number): Promise<any> => {
     try {
-      const apiService = await getApiService();
-      return apiService.post('/AddCourseForTeacher', { userId, courseId });
+      const { data } = await apiService.post('/AddCourseForTeacher', { userId, courseId });
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  removeTeacherFromCourse: async (userId: number, courseId: number): AxiosPromise<void> => {
+  removeTeacherFromCourse: async (userId: number, courseId: number): Promise<any> => {
     try {
-      const apiService = await getApiService();
-      return apiService.delete('/RemoveTeacherFromCourse', { params: { userId, courseId } });
+      const { data } = await apiService.delete('/RemoveTeacherFromCourse', { params: { userId, courseId } });
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  getCourses: async (): AxiosPromise<Course[]> => {
+  getCourses: async (): Promise<Course[]> => {
     try {
-      const apiService = await getApiService();
-      return apiService.get('/GetCourses');
+      const { data } = await apiService.get('/GetCourses');
+      return data;
     } catch (e: any) {
       console.error(e);
       return e;
     }
   },
 
-  getCoursesOfTeacher: async (userId: Number): AxiosPromise<Course[]> => {
+  getCoursesOfTeacher: async (userId: Number): Promise<Course[]> => {
     return teacherDataOperations.getCoursesOfTeacher(userId);
   },
 };

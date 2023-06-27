@@ -1,32 +1,26 @@
-import { AxiosPromise } from 'axios';
-import { getApiService } from './apiService';
-import { UserType, User, Course } from './types';
-import *  as config from './config';
-import { setupMocks } from '../tests/data/studentMocks';
-if (config.TEST_MODE)
-    setupMocks();
+import { Course, Grade } from './types';
+import apiService from './apiService';
 
 interface StudentDataOperations {
-    getCoursesOfStudent(userId: number): AxiosPromise<Course[]>;
-    getGradesOfStudentInCourse(userId: number, courseId: number): AxiosPromise<Grade[]>;
+    getCoursesOfStudent(userId: number): Promise<Course[]>;
+    getGradesOfStudentInCourse(userId: number, courseId: number): Promise<Grade[]>;
 }
 
 export const studentDataOperations: StudentDataOperations = {
-    getCoursesOfStudent: async (userId: number): AxiosPromise<Course[]> => {
-    getCoursesOfStudent: async (userId: number): AxiosPromise<Course[]> => {
+    getCoursesOfStudent: async (userId: number): Promise<Course[]> => {
         try {
-            const apiService = await getApiService();
-            return apiService.get('/GetCoursesOfStudent', { params: { userId } });
+            const { data } = await apiService.get('/GetCoursesOfStudent', { params: { userId } });
+            return data;
         } catch (e: any) {
             console.error(e);
             return e;
         }
     },
 
-    getGradesOfStudentInCourse: async (userId: number, courseId: number): AxiosPromise<Grade[]> => {
+    getGradesOfStudentInCourse: async (userId: number, courseId: number): Promise<Grade[]> => {
         try {
-            const apiService = await getApiService();
-            return apiService.get('/GetGradesOfStudentInCourse', { params: { userId, courseId } });
+            const { data } = await apiService.get('/GetGradesOfStudentInCourse', { params: { userId, courseId } });
+            return data;
         } catch (e: any) {
             console.error(e);
             return e;

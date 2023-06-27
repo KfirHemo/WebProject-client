@@ -1,38 +1,15 @@
-import axios, { AxiosInstance, AxiosPromise, AxiosResponse } from 'axios';
-import * as config from './config';
-import { addMockApiCalls, createMockService, methodTypes } from '../tests/data/apiServiceMocks';
-import { User, UserType } from './types';
+import axios from "axios";
+import { initMockApiCalls } from "../tests/data/apiServiceMocks";
 
-const apiService: AxiosInstance = axios.create({
-  baseURL: config.SERVER_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-if (config.TEST_MODE) {
-  createMockService(apiService);
-  addMockApiCalls([
-    {
-      method: methodTypes.Get,
-      url: '/CheckUserLogin',
-      response: {
-        status: 200,
-        data: {
-          id: 1,
-          name: 'Test Teacher',
-          type: UserType.Teacher,
-          password: '1234',
-        },
-      },
-    },
-  ]);
+//Set this to true to enable test mode, meaning use mock server connection instead of real.
+const TEST_MODE = true;
+if (TEST_MODE) {
+    initMockApiCalls();
 }
 
-export const getApiService = async (): Promise<AxiosInstance> => {
-  return apiService;
-};
-
-export const checkUserExists = async (username: string, password: string): AxiosPromise<any> => {
-  return apiService.get('/CheckUserLogin', { params: { username, password } });
-};
+export default axios.create({
+    baseURL: 'https://localhost:5000',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+}); 

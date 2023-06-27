@@ -5,17 +5,17 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import ManageUsers from './ManageUsers';
 import ManageCourses from './ManageCourses';
-import StudentPage from './StudentPage';
-import { checkUserExists } from '../data/apiService';
 import '../styles/App.css';
 import { User } from '../data/types';
 import { navData } from '../lib/navData';
 import TeacherPage from './TeacherPage';
-import GetCoursesOfStudent from './GetCoursesOfStudent';
+import apiService from '../data/apiService';
+
 const App: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setUsername('');
@@ -35,11 +35,9 @@ const App: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = { username, password };
-
     let foundUser;
     try {
-      const res = await checkUserExists(username, password);
+      const res = await apiService.get('/CheckUserLogin', { params: { username, password } });
       if (res) foundUser = res.data;
     } catch (e) {
       alert((e as Error).message);
@@ -52,24 +50,8 @@ const App: React.FC = () => {
     }
   };
 
-  const navigate = useNavigate();
 
-  const handleNavigation = () => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
-    switch (user.type) {
-      case UserType.Manager:
-        navigate('/manager');
-        break;
-      default:
-        navigate('/');
-        break;
-    }
-  };
-
-  if (user) {
+  if (loggedInUser) {
     return (
       <>
         <Navbar collapseOnSelect style={{ position: "sticky" }} expand="md" bg="primary" variant="dark" fixed="top">
@@ -93,7 +75,7 @@ const App: React.FC = () => {
           </Container>
         </Navbar>
         <Routes>
-          <Route path="/" element={<></>} />
+
           <Route path="/users" element={<ManageUsers />} />
           <Route path="/courses" element={<ManageCourses />} />
           <Route path="/grades" element={<TeacherPage />} />

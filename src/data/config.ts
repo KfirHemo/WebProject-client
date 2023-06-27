@@ -1,2 +1,0 @@
-export const SERVER_URL = 'https://localhost:5000'; //The address for the server
-export const TEST_MODE = false; //Set this to true to enable test mode, meaning use mock server connection instead of real.

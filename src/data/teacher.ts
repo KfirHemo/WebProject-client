@@ -1,64 +1,59 @@
-import { AxiosInstance, AxiosPromise } from 'axios';
-import { getApiService } from './apiService';
 import { Course, User } from './types';
-import *  as config from './config';
-import { setupMocks } from '../tests/data/teacherMocks';
-if (config.TEST_MODE)
-    setupMocks();
+import apiService from './apiService';
 
 interface TeacherDataOperations {
-    getCoursesOfTeacher(userId: Number): AxiosPromise<Course[]>;
-    getStudentsInCourse(userId: number, courseId: number): AxiosPromise<User[]>;
-    addGradeForStudent(userId: number, courseId: number, grade: number, description: string): AxiosPromise<void>;
-    updateGradeForStudent(userId: number, courseId: number, grade: number, description: string): AxiosPromise<void>
-    removeGradeForStudent(userId: number, courseId: number, description: string): AxiosPromise<number>
+    getCoursesOfTeacher(userId: Number): Promise<Course[]>;
+    getStudentsInCourse(userId: number, courseId: number): Promise<User[]>;
+    addGradeForStudent(userId: number, courseId: number, grade: number, description: string): Promise<any>;
+    updateGradeForStudent(userId: number, courseId: number, grade: number, description: string): Promise<any>
+    removeGradeForStudent(userId: number, courseId: number, description: string): Promise<number>
 }
 
 export const teacherDataOperations: TeacherDataOperations = {
-    getCoursesOfTeacher: async (userId: Number): AxiosPromise<Course[]> => {
+    getCoursesOfTeacher: async (userId: Number): Promise<Course[]> => {
         try {
-            const apiService: AxiosInstance = await getApiService();
-            return apiService.get('/GetCoursesForTeacher', { params: { userId } });
+            const { data } = await apiService.get('/GetCoursesForTeacher', { params: { userId } });
+            return data;
         } catch (error: any) {
             console.error(error);
             return Promise.reject(error);
         }
     },
 
-    getStudentsInCourse: async (userId: number, courseId: number): AxiosPromise<User[]> => {
+    getStudentsInCourse: async (userId: number, courseId: number): Promise<User[]> => {
         try {
-            const apiService: AxiosInstance = await getApiService();
-            return apiService.get('/GetStudentsInCourse', { params: { userId, courseId } });
+            const { data } = await apiService.get('/GetStudentsInCourse', { params: { userId, courseId } });
+            return data;
         } catch (error: any) {
             console.error(error);
             return Promise.reject(error);
         }
     },
 
-    addGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): AxiosPromise<void> => {
+    addGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): Promise<any> => {
         try {
-            const apiService: AxiosInstance = await getApiService();
-            return apiService.post('/AddGradeForStudent', { params: {userId: userId,courseId: courseId,grade: grade,description: description} });
+            const { data } = await apiService.post('/AddGradeForStudent', { params: { userId: userId, courseId: courseId, grade: grade, description: description } });
+            return data;
         } catch (error: any) {
             console.error(error);
             return Promise.reject(error);
         }
     },
 
-    updateGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): AxiosPromise<void> => {
+    updateGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): Promise<any> => {
         try {
-            const apiService: AxiosInstance = await getApiService();
-            return apiService.post('/UpdateGradeForStudent', { params: {userId: userId,courseId: courseId,grade: grade,description: description} });
+            const { data } = await apiService.post('/UpdateGradeForStudent', { params: { userId: userId, courseId: courseId, grade: grade, description: description } });
+            return data;
         } catch (error: any) {
             console.error(error);
             return Promise.reject(error);
         }
     },
 
-    removeGradeForStudent: async (userId: number, courseId: number, description: string): AxiosPromise<number> => {
+    removeGradeForStudent: async (userId: number, courseId: number, description: string): Promise<number> => {
         try {
-            const apiService: AxiosInstance = await getApiService();
-            return apiService.delete('/RemoveGradeForStudent', { params: { userId, courseId, description } });
+            const { data } = await apiService.delete('/RemoveGradeForStudent', { params: { userId, courseId, description } });
+            return data;
         } catch (error: any) {
             console.error(error);
             return Promise.reject(error);
