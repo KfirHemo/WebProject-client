@@ -27,16 +27,15 @@ export const managerDataOperations: ManagerDataOperations = {
   },
 
   addUser: async (user: User): Promise<number> => {
-    const { name, password, type } = user;
-    if (!name || !password || !type) return Promise.reject(null);
     try {
-      const { data } = await apiService.post('/AddUser', { params: { username: name, password: password, type: type } });
+      const { data } = await apiService.post('/AddUser', user);
       return data;
     } catch (e: any) {
       console.error(e);
-      return e;
+      throw e;
     }
-  },
+  }
+  ,
 
   removeUser: async (user: User): Promise<number> => {
     try {

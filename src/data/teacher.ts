@@ -30,15 +30,16 @@ export const teacherDataOperations: TeacherDataOperations = {
         }
     },
 
-    addGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): Promise<any> => {
+    addGradeForStudent: async (userId: number, courseId: number, score: number, description: string): Promise<any> => {
         try {
-            const { data } = await apiService.post('/AddGradeForStudent', { params: { userId: userId, courseId: courseId, grade: grade, description: description } });
-            return data;
+          const { data } = await apiService.post('/AddGradeForStudent', { userId, courseId, score, description });
+          return data;
         } catch (error: any) {
-            console.error(error);
-            return Promise.reject(error);
+          console.error(error);
+          throw error;
         }
-    },
+      }
+      ,
 
     updateGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): Promise<any> => {
         try {
