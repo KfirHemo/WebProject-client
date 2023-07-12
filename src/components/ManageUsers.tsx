@@ -86,121 +86,113 @@ const ManageUsers = () => {
     );
   }
   return (
-    <div className="container d-flex flex-column">
-      <Container fluid>
-        <h1 className="mb-4 text-center">Manage Users</h1>
-        <hr className="section-separator" />
-        <div className="col-md-5 mb-3">
-          <Form onSubmit={handleAddUser}>
-            <h3>Add User</h3>
-            <Row>
-              <Form.Group className="mb-3" controlId="formGroupname">
-                <Form.Control
-                  type="text"
-                  placeholder="name"
-                  name="name"
-                  value={newUser.name}
-                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formGroupPassword">
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  value={newUser.password}
-                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formGrouptype">
-                <Form.Select
-                  name="type"
-                  value={newUser.type}
-                  onChange={(e) => setNewUser({ ...newUser, type: e.target.value as UserType })}
-                >
-                  <option value="teacher">Teacher</option>
-                  <option value="student">Student</option>
-                </Form.Select>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group className="mb-3" controlId="formGroupUserAdd">
-                <Button variant="primary" type="submit">
-                  Add
-                </Button>
-              </Form.Group>
-            </Row>
-          </Form>
-          <hr className="section-separator" />
-          <Form.Label>Filter users</Form.Label>
+    <><Container fluid>
+      <h1 className="mb-4 text-center">Manage Users</h1>
+      <hr className="section-separator" />
+      <div className="col-md-5 mb-3">
+        <Form onSubmit={handleAddUser}>
+          <h3>Add User</h3>
           <Row>
-            <Col>
+            <Form.Group className="mb-3" controlId="formGroupname">
               <Form.Control
                 type="text"
-                placeholder="Filter by name"
+                placeholder="name"
                 name="name"
-                value={filter.name}
-                onChange={handleFilterChange as ChangeEventHandler<HTMLInputElement>}
-              />
-            </Col>
-            <Col>
+                value={newUser.name}
+                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formGroupPassword">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={newUser.password}
+                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formGrouptype">
               <Form.Select
                 name="type"
-                value={filter.type}
-                onChange={handleFilterChange}
+                value={newUser.type}
+                onChange={(e) => setNewUser({ ...newUser, type: e.target.value as UserType })}
               >
-                <option value="">All</option>
                 <option value="teacher">Teacher</option>
                 <option value="student">Student</option>
               </Form.Select>
-            </Col>
+            </Form.Group>
           </Row>
-        </div>
-        <div className="table-wrapper">
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>User Type</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers
-                .slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage)
-                .map((user, index) => (
-                  <tr key={index}>
-                    <td>{user.name}</td>
-                    <td>{user.type}</td>
-                    <td>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleDeleteConfirmation(user)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </Table>
-        </div>
-        <PaginationComponent
-          currentPage={currentPage}
-          itemsPerPage={usersPerPage}
-          totalItems={filteredUsers.length}
-          onPageChange={(currentPage) => setCurrentPage(currentPage)}
-          onItemsPerPageChange={(itemsPerPage) => setUsersPerPage(itemsPerPage)}
-          availableItemsPerPage={[10, 20, 50]}
-        />
-      </Container>
-      <ConfirmModal
+          <Row>
+            <Form.Group className="mb-3" controlId="formGroupUserAdd">
+              <Button variant="primary" type="submit">
+                Add
+              </Button>
+            </Form.Group>
+          </Row>
+        </Form>
+        <hr className="section-separator" />
+        <Form.Label>Filter users</Form.Label>
+        <Row>
+          <Col>
+            <Form.Control
+              type="text"
+              placeholder="Filter by name"
+              name="name"
+              value={filter.name}
+              onChange={handleFilterChange as ChangeEventHandler<HTMLInputElement>} />
+          </Col>
+          <Col>
+            <Form.Select
+              name="type"
+              value={filter.type}
+              onChange={handleFilterChange}
+            >
+              <option value="">All</option>
+              <option value="teacher">Teacher</option>
+              <option value="student">Student</option>
+            </Form.Select>
+          </Col>
+        </Row>
+      </div>
+      <div className="table-wrapper">
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>User Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers
+              .slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage)
+              .map((user, index) => (
+                <tr key={index}>
+                  <td>{user.name}</td>
+                  <td>{user.type}</td>
+                  <td>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeleteConfirmation(user)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+      </div>
+      <PaginationComponent
+        currentPage={currentPage}
+        itemsPerPage={usersPerPage}
+        totalItems={filteredUsers.length}
+        onPageChange={(currentPage) => setCurrentPage(currentPage)}
+        onItemsPerPageChange={(itemsPerPage) => setUsersPerPage(itemsPerPage)}
+        availableItemsPerPage={[10, 20, 50]} />
+    </Container><ConfirmModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleRemoveUser}
-        confirmationText="Are you sure you want to delete this user?"
-      />
-    </div>
+        confirmationText="Are you sure you want to delete this user?" /></>
   );
 };
 

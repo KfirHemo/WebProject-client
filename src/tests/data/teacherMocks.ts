@@ -31,7 +31,7 @@ export const teacherMocks: MockApiCall[] = [
         },
     },
     {
-        method: 'Delete',
+        method: 'Post',
         url: '/UpdateGradeForStudent',
         response: {
             status: 200,

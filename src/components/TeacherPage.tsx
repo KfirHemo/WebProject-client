@@ -4,7 +4,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { User, Course, Grade, UserType } from '../data/types';
 import { teacherDataOperations } from '../data/teacher';
 import { studentDataOperations } from '../data/student';
-import '../styles/TeacherPage.css';
+import '../styles/ManageGrades.css';
 import ConfirmModal from './ConfirmModal';
 
 const TeacherPage: React.FC = () => {
@@ -16,6 +16,8 @@ const TeacherPage: React.FC = () => {
     const [newGrade, setNewGrade] = useState<number>(0);
     const [newGradeDescription, setNewGradeDescription] = useState<string>('');
     const [gradeToRemove, setGradeToRemove] = useState<Grade | null>(null);
+    const [gradeToUpdate, setGradeToUpdate] = useState<Grade | null>(null);
+    const [updatedScore, setUpdatedScore] = useState<number>(0);
     const [courses, setCourses] = useState<Course[]>([]);
     const [viewMode, setViewMode] = useState<'courses' | 'students' | 'grades'>('courses');
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -49,6 +51,17 @@ const TeacherPage: React.FC = () => {
             fetchGradesForStudent(selectedStudent);
         }
     }, [selectedStudent]);
+
+    useEffect(() => {
+        if (gradeToUpdate && updatedScore !== gradeToUpdate.score) {
+            gradeToUpdate.score = updatedScore;
+            handleUpdateGrade().then(() => {
+                alert("Score successfully updated!");
+            }).catch(
+                () => { alert("Score failed to update!"); }
+            );
+        }
+    }, [gradeToUpdate]);
 
     const handleDeleteConfirmation = (grade: Grade) => {
         setGradeToRemove(grade);
@@ -122,6 +135,16 @@ const TeacherPage: React.FC = () => {
             }
         }
     };
+    const handleUpdateGrade = async () => {
+        if (selectedStudent && selectedCourse && gradeToUpdate) {
+            try {
+                await teacherDataOperations.updateGradeForStudent(selectedStudent.id, selectedCourse.id, gradeToUpdate.score, gradeToUpdate.description || '');
+                fetchGradesForStudent(selectedStudent);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
 
     const handleBack = () => {
         if (viewMode === 'students') {
@@ -143,133 +166,126 @@ const TeacherPage: React.FC = () => {
     }
 
     return (
-        <div className="container d-flex flex-column">
+        <>
+            <h1 className="mb-4 text-center">Manage Grades</h1>
             <Container fluid>
-                <h1 className="mb-4 text-center">Manage Grades</h1>
-                <hr className="section-separator" />
-
                 {viewMode === 'courses' && (
-                    <Row>
-                        <Col xs={12} className='narrow-list'>
-                            <h3>Courses</h3>
-                            <ListGroup className="mb-3 list-scrollable">
-                                {courses.map((course) => (
-                                    <ListGroup.Item
-                                        key={course.id}
-                                        action
-                                        onClick={() => handleCourseSelect(course)}
-                                        active={selectedCourse && selectedCourse.id === course.id}
-                                        className="cursor-pointer"
-                                    >
-                                        {course.name}
-                                    </ListGroup.Item>
-                                ))}
-                            </ListGroup>
-                        </Col>
-                    </Row>
+                    <>
+                        <h3>Courses</h3>
+                        <ListGroup className="mb-3 list-scrollable">
+                            {courses.map((course) => (
+                                <ListGroup.Item
+                                    key={course.id}
+                                    action
+                                    onClick={() => handleCourseSelect(course)}
+                                    active={selectedCourse && selectedCourse.id === course.id}
+                                    className="cursor-pointer"
+                                >
+                                    {course.name}
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup></>
                 )}
 
                 {viewMode === 'students' && (
-                    <Row>
-                        <Col xs={12} className='narrow-list'>
-                            <Button variant="secondary" className="mb-3" onClick={handleBack}>
-                                <BsArrowLeft className="mr-2" />
-                            </Button>
-                            <h3>Students in course: {selectedCourse.name}</h3>
-                            <ListGroup className="mb-3 list-scrollable">
-                                {studentsInCourse.length > 0 ? (
-                                    studentsInCourse.map((student) => (
-                                        <ListGroup.Item
-                                            key={student.id}
-                                            action
-                                            onClick={() => handleStudentSelect(student)}
-                                            active={selectedStudent && selectedStudent.id === student.id}
-                                            className="cursor-pointer"
-                                        >
-                                            {student.name}
-                                        </ListGroup.Item>
-                                    ))
-                                ) : (
-                                    <p>No students found in this course.</p>
-                                )}
-                            </ListGroup>
-                        </Col>
-                    </Row>
+                    <>
+                        <Button variant="secondary" className="mb-3" onClick={handleBack}>
+                            <BsArrowLeft className="mr-2" />
+                        </Button>
+                        <h3>Students in course: {selectedCourse.name}</h3>
+                        <ListGroup className="mb-3 list-scrollable">
+                            {studentsInCourse.length > 0 ? (
+                                studentsInCourse.map((student) => (
+                                    <ListGroup.Item
+                                        key={student.id}
+                                        action
+                                        onClick={() => handleStudentSelect(student)}
+                                        active={selectedStudent && selectedStudent.id === student.id}
+                                        className="cursor-pointer"
+                                    >
+                                        {student.name}
+                                    </ListGroup.Item>
+                                ))
+                            ) : (
+                                <p>No students found in this course.</p>
+                            )}
+                        </ListGroup></>
                 )}
 
                 {viewMode === 'grades' && (
-                    <Row>
-                        <Col xs={12} className='narrow-list'>
-                            <Button variant="secondary" onClick={handleBack}>
-                                <BsArrowLeft className="mr-2" />
-                            </Button>
-                            <h3>Grades for student: {selectedStudent.name}</h3>
-
-                            <ListGroup className="mb-3 list-scrollable ">
+                    <>
+                        <Button variant="secondary" onClick={handleBack}>
+                            <BsArrowLeft className="mr-2" />
+                        </Button>
+                        <h3>Grades for student: {selectedStudent.name}</h3>
+                        <Form>
+                            <ListGroup className="list-scrollable">
                                 {grades.length > 0 ? (
                                     grades.map((grade) => (
                                         <ListGroup.Item key={grade.id} className="grade-item">
-                                            <Col>
+                                            <Col sm={8} >
                                                 <strong className="grade-description">{grade.description}</strong>
                                             </Col>
-                                            <Col>
-                                                Grade:
-                                                <span
-                                                    className={`grade-score ${grade.score >= 55 ? 'text-success' : 'text-danger'}`}
-                                                >
-                                                    {grade.score}
-                                                </span>
+                                            <Col sm={5} className='d-flex'>
+                                                <Form.Control
+                                                    type="number"
+                                                    defaultValue={grade.score}
+                                                    onChange={(e) =>
+                                                        setUpdatedScore(parseInt(e.currentTarget.value))
+                                                    }
+                                                    min='0'
+                                                    max='100'
+                                                    step="any"
+                                                    className={`w-50 grade-score ${grade.score >= 55 ? 'text-success' : 'text-danger'}`} />
+                                                <Button size="sm" onClick={() => setGradeToUpdate(grade)}>
+                                                    Update
+                                                </Button>
+                                                <Button variant="danger" size="sm" onClick={() => handleDeleteConfirmation(grade)}>
+                                                    Remove
+                                                </Button>
                                             </Col>
-                                            <Button variant="danger" size="sm" onClick={() => handleDeleteConfirmation(grade)}>
-                                                Remove
-                                            </Button>
-                                        </ListGroup.Item>
 
+                                        </ListGroup.Item>
                                     ))
                                 ) : (
                                     <p>No grades found for this student.</p>
                                 )}
                             </ListGroup>
-                            <Form className="mt-3 mb-3">
-                                <Form.Group>
-                                    <Form.Label className='mb-3'>Add Grade</Form.Label>
-                                    <Row className="align-items-center">
-                                        <Col xs={12} sm={3} className="mb-2 mb-sm-0">
-                                            <Form.Control
-                                                type="number"
-                                                placeholder="Grade"
-                                                value={newGrade}
-                                                onChange={(e) => setNewGrade(parseInt(e.target.value))}
-                                                min={0}
-                                                max={100} />
-                                        </Col>
-                                        <Col xs={12} sm={6} className="mb-2 mb-sm-0">
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Description"
-                                                value={newGradeDescription}
-                                                onChange={(e) => setNewGradeDescription(e.target.value)}
-                                            />
-                                        </Col>
-                                        <Col xs={12} sm={3}>
-                                            <Button variant="primary" onClick={handleAddGrade} className="w-100">
-                                                Add
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </Form.Group>
-                            </Form>
-                        </Col>
-                    </Row>
+                            <Form.Group>
+                                <Row className="align-items-center">
+                                    <Form.Label>Add Grade</Form.Label>
+                                    <Col sm={1}>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Grade"
+                                            value={newGrade}
+                                            onChange={(e) => setNewGrade(parseInt(e.target.value))}
+                                            min={0}
+                                            max={100} />
+                                    </Col>
+                                    <Col sm={3}>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Description"
+                                            value={newGradeDescription}
+                                            onChange={(e) => setNewGradeDescription(e.target.value)} />
+                                    </Col>
+                                    <Col xs={12} sm={3}>
+                                        <Button variant="primary" onClick={handleAddGrade} className="w-50">
+                                            Add
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form.Group>
+                        </Form></>
                 )}
             </Container>
             <ConfirmModal
                 show={showDeleteModal}
                 onHide={() => setShowDeleteModal(false)}
                 onConfirm={handleRemoveGrade}
-                confirmationText={`Are you sure you want to remove the grade for ${gradeToRemove?.description}?`}
-            />
-        </div>
+                confirmationText={`Are you sure you want to remove the grade for ${gradeToRemove?.description}?`} />
+        </>
     );
 };
 

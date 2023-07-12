@@ -66,74 +66,67 @@ const ManageCourses = () => {
         );
     }
     return (
-        <div className="container d-flex flex-column">
-            <Container fluid>
-                <h1 className="mb-4 text-center">Manage Courses</h1>
-                <hr className="section-separator" />
+        <><Container fluid>
+            <h1 className="mb-4 text-center">Manage Courses</h1>
+            <hr className="section-separator" />
 
-                <div className="col-md-5 mb-3">
-                    <Row>
-                        <Col>
-                            <Select
-                                options={users}
-                                value={selectedUser}
-                                onChange={handleUserChange}
-                                getOptionLabel={(option) => option.name}
-                                getOptionValue={(option) => option.id.toString()}
-                                placeholder="Select Teacher or Student"
-                                isClearable
-                            />
-                        </Col>
-                    </Row>
-                </div>
+            <div className="col-md-5 mb-3">
+                <Row>
+                    <Col>
+                        <Select
+                            options={users}
+                            value={selectedUser}
+                            onChange={handleUserChange}
+                            getOptionLabel={(option) => option.name}
+                            getOptionValue={(option) => option.id.toString()}
+                            placeholder="Select Teacher or Student"
+                            isClearable />
+                    </Col>
+                </Row>
+            </div>
 
-                <div className="table-wrapper">
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {courses
-                                .slice((currentPage - 1) * coursesPerPage, currentPage * coursesPerPage)
-                                .map((course, index) => (
-                                    <tr key={index}>
-                                        <td>{course.id}</td>
-                                        <td>{course.name}</td>
-                                        <td>
-                                            <Button
-                                                variant="danger"
-                                                onClick={() => handleDeleteConfirmation(course)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </Table>
-                </div>
+            <div className="table-wrapper">
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {courses
+                            .slice((currentPage - 1) * coursesPerPage, currentPage * coursesPerPage)
+                            .map((course, index) => (
+                                <tr key={index}>
+                                    <td>{course.id}</td>
+                                    <td>{course.name}</td>
+                                    <td>
+                                        <Button
+                                            variant="danger"
+                                            onClick={() => handleDeleteConfirmation(course)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </Table>
+            </div>
 
-                <PaginationComponent
-                    currentPage={currentPage}
-                    itemsPerPage={coursesPerPage}
-                    totalItems={courses.length}
-                    onPageChange={setCurrentPage}
-                    onItemsPerPageChange={(itemsPerPage) => setCoursesPerPage(itemsPerPage)}
-                    availableItemsPerPage={[10, 20, 50]}
-                />
-            </Container>
-
-            <ConfirmModal
+            <PaginationComponent
+                currentPage={currentPage}
+                itemsPerPage={coursesPerPage}
+                totalItems={courses.length}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={(itemsPerPage) => setCoursesPerPage(itemsPerPage)}
+                availableItemsPerPage={[10, 20, 50]} />
+        </Container><ConfirmModal
                 show={showDeleteModal}
                 onHide={() => setShowDeleteModal(false)}
                 onConfirm={handleRemoveCourse}
-                confirmationText="Are you sure you want to remove this course?"
-            />
-        </div>
+                confirmationText="Are you sure you want to remove this course?" /></>
     );
 };
 

@@ -1,17 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar, Nav, Button, Container } from 'react-bootstrap';
-
+import { Navbar, Nav, Button, Container, NavbarBrand } from 'react-bootstrap';
+import './styles/App.css';
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-
-import ManageUsers from './ManageUsers';
-import ManageCourses from './ManageCourses';
-import '../styles/App.css';
-import { User } from '../data/types';
-import { navData } from '../lib/navData';
-import TeacherPage from './TeacherPage';
-import apiService from '../data/apiService';
-import StudentPage from './StudentPage';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import ManageUsers from './components/ManageUsers';
+import ManageCourses from './components/ManageCourses';
+import { User, UserType } from './data/types';
+import { navData } from './lib/navData';
+import TeacherPage from './components/TeacherPage';
+import apiService from './data/apiService';
+import StudentPage from './components/StudentPage';
 
 const App: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -56,35 +54,44 @@ const App: React.FC = () => {
   if (loggedInUser) {
     return (
       <>
-        <Navbar collapseOnSelect style={{ position: "sticky" }} expand="md" bg="primary" variant="dark" fixed="top">
-          <Container>
-            <Navbar.Brand href="#home">Logo</Navbar.Brand>
-            <span className="text-light ml-2">Welcome {loggedInUser.name}</span>
-
-            <Navbar.Toggle aria-controls="navbarScroll" />
-
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="ms-auto" navbarScroll>
-                {navData
-                  .filter((nav) => nav.userType.includes(loggedInUser.type))
-                  .map((nav) => (
-                    <Nav.Link key={nav.link} href={nav.link}>{nav.text}</Nav.Link>
-                  ))}
-                <Button variant="primary" onClick={handleLogout}>Logout</Button>
-              </Nav>
-
-            </Navbar.Collapse>
-          </Container>
+        <Navbar collapseOnSelect expand="md" bg="primary" variant="dark" fixed='top'>
+          <NavbarBrand>
+            <img src={require('./logo.png')} />
+            <Navbar.Text className="text-light ml-2">Welcome {loggedInUser.name}</Navbar.Text>
+          </NavbarBrand>
+          <Navbar.Toggle aria-controls="navbarScroll" />
+          <Navbar.Collapse>
+            <Nav style={{ alignItems: 'center' }}>
+              {navData
+                .filter((nav) => nav.userType.includes(loggedInUser.type))
+                .map((nav) => (
+                  <Nav.Link key={nav.link} href={nav.link}>{nav.text}</Nav.Link>
+                ))}
+              <Button variant="primary" onClick={handleLogout}>Logout</Button>
+            </Nav>
+          </Navbar.Collapse>
         </Navbar>
-        <Routes>
-
-          <Route path="/users" element={<ManageUsers />} />
-          <Route path="/courses" element={<ManageCourses />} />
-          <Route path="/grades" element={<TeacherPage />} />
+        <div id="content" className='ui container'>
+          {window.location.pathname === '/' && (
+            <div className='btn-group-vertical' style={{ alignItems: 'center' }}>
+              <h1 className="mb-4">Welcome {loggedInUser.name}</h1>
+              {navData
+                .filter((nav) => nav.userType.includes(loggedInUser.type))
+                .map((nav) => (
+                  <Link to={nav.link} className="mb-3">
+                    <button className="btn btn-primary btn-lg">{nav.text}</button>
+                  </Link>
+                ))}
+            </div>
+          )}
+          <Routes>
+            <Route path="/users" element={<ManageUsers />} />
+            <Route path="/courses" element={<ManageCourses />} />
+            <Route path="/manageGrades" element={<TeacherPage />} />
             <Route path="/student" element={<StudentPage />} />
-        </Routes>
+          </Routes>
+        </div>
       </>
-
     );
   }
 

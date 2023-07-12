@@ -26,8 +26,8 @@ const checkUserExistsMock: MockApiCall = {
         status: 200,
         data: {
             id: 1,
-            name: 'Test Teacher',
-            type: UserType.Manager,
+            name: 'Test',
+            type: UserType.Student,
             password: '1234',
         },
     },
