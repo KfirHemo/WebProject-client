@@ -1,15 +1,3 @@
-.container {
-    display: flex;
-    /* flex-direction: column; */
-    align-items: center;
-    /* Center the content horizontally */
-}
-
-.section-separator {
-    border-top: 1px solid #ccc;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
 
 .access-denied {
     text-align: center;
@@ -29,35 +17,6 @@
     max-height: 50vh;
     overflow-y: auto;
 }
-
-.cursor-pointer {
-    cursor: pointer;
-}
-
-.list-group-item {
-    cursor: pointer;
-}
-
-/* Added styles for less wide lists */
-.narrow-list {
-    max-width: 120vh;
-    margin: 0 auto;
-    /* Center the list horizontally */
-}
-
-/* Added styles for spacing between columns in grades list */
-.grade-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.grade-item:last-child {
-    border-bottom: none;
-}
-
 .grade-description {
     font-weight: bold;
     font-size: 1.2rem;
@@ -65,16 +24,18 @@
 
 .grade-score {
     font-size: 1.2rem;
+    text-align: center;
 }
 
 .grade-item {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding: 1rem;
     border-bottom: 1px solid #dee2e6;
 }
 
-.grade-item:last-child {
-    border-bottom: none;
+.grade-controls {
+    display: flex;
+    justify-content: space-between;
 }

@@ -17,7 +17,6 @@ const TeacherPage: React.FC = () => {
     const [newGradeDescription, setNewGradeDescription] = useState<string>('');
     const [gradeToRemove, setGradeToRemove] = useState<Grade | null>(null);
     const [gradeToUpdate, setGradeToUpdate] = useState<Grade | null>(null);
-    const [updatedScore, setUpdatedScore] = useState<number>(0);
     const [courses, setCourses] = useState<Course[]>([]);
     const [viewMode, setViewMode] = useState<'courses' | 'students' | 'grades'>('courses');
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -53,8 +52,7 @@ const TeacherPage: React.FC = () => {
     }, [selectedStudent]);
 
     useEffect(() => {
-        if (gradeToUpdate && updatedScore !== gradeToUpdate.score) {
-            gradeToUpdate.score = updatedScore;
+        if (gradeToUpdate) {
             handleUpdateGrade().then(() => {
                 alert("Score successfully updated!");
             }).catch(
@@ -223,28 +221,26 @@ const TeacherPage: React.FC = () => {
                                 {grades.length > 0 ? (
                                     grades.map((grade) => (
                                         <ListGroup.Item key={grade.id} className="grade-item">
-                                            <Col sm={8} >
-                                                <strong className="grade-description">{grade.description}</strong>
-                                            </Col>
-                                            <Col sm={5} className='d-flex'>
-                                                <Form.Control
-                                                    type="number"
-                                                    defaultValue={grade.score}
-                                                    onChange={(e) =>
-                                                        setUpdatedScore(parseInt(e.currentTarget.value))
-                                                    }
-                                                    min='0'
-                                                    max='100'
-                                                    step="any"
-                                                    className={`w-50 grade-score ${grade.score >= 55 ? 'text-success' : 'text-danger'}`} />
+                                            <strong className="grade-description">{grade.description}</strong>
+                                            <div className="grade-controls">
+                                                <Form.Control type='number' defaultValue={grade.score}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === '-' || e.key === 'e') e.preventDefault();
+                                                    }}
+                                                    onInput={(e) => {
+                                                        e.currentTarget.value = e.currentTarget.value.replace(/^0+$/, '0'); // remove leading zeroes
+                                                        if (e.currentTarget.value !== '0')
+                                                            e.currentTarget.value = e.currentTarget.value.replace(/^0+/, '');
+                                                        e.currentTarget.value = parseInt(e.currentTarget.value) > 100 ? grade.score.toString() : e.currentTarget.value;
+                                                        grade.score = parseInt(e.currentTarget.value);
+                                                    }} className={`grade-score w-50`} />
                                                 <Button size="sm" onClick={() => setGradeToUpdate(grade)}>
                                                     Update
                                                 </Button>
                                                 <Button variant="danger" size="sm" onClick={() => handleDeleteConfirmation(grade)}>
                                                     Remove
                                                 </Button>
-                                            </Col>
-
+                                            </div>
                                         </ListGroup.Item>
                                     ))
                                 ) : (
