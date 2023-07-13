@@ -19,3 +19,13 @@
 .modal-footer {
     justify-content: space-between;
 }
+.form-item {
+    padding: 0.1rem;
+}
+
+.form-row {
+    display: flex;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+    padding: 0.5rem;
+}
