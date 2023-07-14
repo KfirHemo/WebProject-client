@@ -84,6 +84,9 @@ export const managerMocks: MockApiCall[] = [
         response: {
             status: 200,
             data: [
+                { id: 1, name: 'Calc1' },
+                { id: 2, name: 'Calc2' },
+                { id: 3, name: 'Intro to CS' },
                 { id: 4, name: 'Algorithms' },
                 { id: 5, name: 'Logic' },
                 { id: 6, name: 'Automata' },

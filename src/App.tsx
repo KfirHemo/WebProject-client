@@ -22,7 +22,6 @@ const App: React.FC = () => {
     setPassword('');
     localStorage.clear();
     setLoggedInUser(undefined);
-    navigate('/');
   };
 
   useEffect(() => {
@@ -54,34 +53,47 @@ const App: React.FC = () => {
   if (loggedInUser) {
     return (
       <>
-        <Navbar collapseOnSelect expand="md" bg="primary" variant="dark" fixed='top'>
+        <Navbar collapseOnSelect expand="md" variant="dark" bg='primary' fixed="top" >
           <NavbarBrand>
-            <img src={require('./logo.png')} />
+            <Link to="/" className="logo-link">
+              <img src={require('./logo.png')} alt="Logo" className="logo" />
+            </Link>
             <Navbar.Text className="text-light ml-2">Welcome {loggedInUser.name}</Navbar.Text>
           </NavbarBrand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse>
-            <Nav style={{ alignItems: 'center' }}>
+            <Nav style={{ alignItems: 'center', width: 'auto' }}>
               {navData
                 .filter((nav) => nav.userType.includes(loggedInUser.type))
                 .map((nav) => (
                   <Nav.Link key={nav.link} href={nav.link}>{nav.text}</Nav.Link>
                 ))}
-              <Button variant="primary" onClick={handleLogout}>Logout</Button>
+              <Nav.Item className="d-md-none">
+                <Nav.Link href='/' onClick={handleLogout} className='logout'>Logout</Nav.Link>
+              </Nav.Item>
             </Nav>
           </Navbar.Collapse>
+          <Nav className="d-none d-md-flex" style={{ marginRight: '20px' }} >
+            <Nav.Link href='/' onClick={handleLogout} className='logout'>Logout</Nav.Link>
+          </Nav>
         </Navbar>
-        <div id="content" className='ui container'>
+        <div id="content" className="main-container">
           {window.location.pathname === '/' && (
-            <div className='btn-group-vertical' style={{ alignItems: 'center' }}>
-              <h1 className="mb-4">Welcome {loggedInUser.name}</h1>
+            <div className="welcome-container">
+              <h1 className="title">Welcome to Grade Management!</h1>
+              <p>Grade Management is a powerful tool for accessing and organizing your academic grades and degree data.</p>
+              <p>Our mission is to provide you with a user-friendly interface to effortlessly manage your grades and students.</p>
+              <p>Get started now and experience our exceptional interface!</p>
+
+              <div className="btn-group">
               {navData
                 .filter((nav) => nav.userType.includes(loggedInUser.type))
                 .map((nav) => (
                   <Link to={nav.link} className="mb-3">
-                    <button className="btn btn-primary btn-lg">{nav.text}</button>
+                    <Button className="btn btn-primary btn-lg" variant='primary'>{nav.text}</Button>
                   </Link>
                 ))}
+              </div>
             </div>
           )}
           <Routes>
@@ -96,35 +108,35 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100">
-      <div className="col-md-3">
-        <h1 className="text-center">Login</h1>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label htmlFor="username">Username:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="username"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <input
-              className="form-control"
-              type="password"
-              id="password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button className="btn btn-primary" type="submit">
-            Sign In
-          </button>
-        </form>
+    <div id="content" className="login-container">
+      <div className="title-container">
+        <img className="logo" src={require("./logo.png")} alt="Logo" />
+        <h1 className="title">Grade Management</h1>
       </div>
+      <h3 className="text-left">Login</h3>
+      <form className="login-form" onSubmit={handleLogin}>
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            className="form-control"
+            type="text"
+            id="username"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            className="form-control"
+            type="password"
+            id="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button className="btn btn-primary" type="submit">Sign In</button>
+      </form>
     </div>
   );
 };
