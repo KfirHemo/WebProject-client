@@ -68,9 +68,9 @@ export const managerDataOperations: ManagerDataOperations = {
     }
   },
 
-  addCourseForTeacher: async (userId: number, courseId: number): Promise<any> => {
+  addCourseForTeacher: async (TeacherId: number, CourseId: number): Promise<any> => {
     try {
-      const { data } = await apiService.post('/AddCourseForTeacher', { userId, courseId });
+      const { data } = await apiService.post('/AddCourseForTeacher', { TeacherId, CourseId });
       return data;
     } catch (e: any) {
       console.error(e);

@@ -41,9 +41,9 @@ export const teacherDataOperations: TeacherDataOperations = {
       }
       ,
 
-    updateGradeForStudent: async (userId: number, courseId: number, grade: number, description: string): Promise<any> => {
+    updateGradeForStudent: async (userId: number, courseId: number, score: number, description: string): Promise<any> => {
         try {
-            const { data } = await apiService.post('/UpdateGradeForStudent', { params: { userId: userId, courseId: courseId, grade: grade, description: description } });
+            const { data } = await apiService.post('/UpdateGradeForStudent', { userId, courseId,score,description } );
             return data;
         } catch (error: any) {
             console.error(error);

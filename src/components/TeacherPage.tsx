@@ -250,7 +250,7 @@ const TeacherPage: React.FC = () => {
                             <Form.Group>
                                 <Row className="align-items-center">
                                     <Form.Label>Add Grade</Form.Label>
-                                    <Col sm={1}>
+                                    <Col>
                                         <Form.Control
                                             type="number"
                                             placeholder="Grade"

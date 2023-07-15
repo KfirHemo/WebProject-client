@@ -25,6 +25,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    document.title = "GradesPro"
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser) as User;
@@ -80,8 +81,8 @@ const App: React.FC = () => {
         <div id="content" className="main-container">
           {window.location.pathname === '/' && (
             <div className="welcome-container">
-              <h1 className="title">Welcome to Grade Management!</h1>
-              <p>Grade Management is a powerful tool for accessing and organizing your academic grades and degree data.</p>
+              <h1 className="title">Welcome to GradesPro!</h1>
+              <p>GradesPro is a powerful tool for accessing and organizing your academic grades and degree data.</p>
               <p>Our mission is to provide you with a user-friendly interface to effortlessly manage your grades and students.</p>
               <p>Get started now and experience our exceptional interface!</p>
 
@@ -111,7 +112,7 @@ const App: React.FC = () => {
     <div id="content" className="login-container">
       <div className="title-container">
         <img className="logo" src={require("./logo.png")} alt="Logo" />
-        <h1 className="title">Grade Management</h1>
+        <h1 className="title">GradesPro</h1>
       </div>
       <h3 className="text-left">Login</h3>
       <form className="login-form" onSubmit={handleLogin}>

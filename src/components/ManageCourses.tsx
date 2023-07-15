@@ -11,6 +11,7 @@ const ManageCourses = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [coursesForUser, setCoursesForUser] = useState<Course[]>([]);
+    const [filteredCourses, setFilterdCourses] = useState<Course[]>([]);
     const [selectedCourse, setSelectedCourse] = useState<Course>();
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -23,11 +24,12 @@ const ManageCourses = () => {
         managerDataOperations.getCourses().then(fetchedCourses => setCourses(fetchedCourses));
     }, []);
 
+
     useEffect(() => {
         if (!selectedUser)
             return;
         managerDataOperations.getCoursesOfTeacher(selectedUser.id).then(fetchedCourses => setCoursesForUser(fetchedCourses))
-    }, [selectedUser]);
+    }, [selectedUser, courses]);
 
     useEffect(() => {
         const filtered = courses.filter((c: Course) => {
@@ -35,7 +37,7 @@ const ManageCourses = () => {
                 return false;
             return true;
         });
-        setCourses(filtered);
+        setFilterdCourses(filtered);
     }, [coursesForUser]);
 
     const handleUserChange = (selectedOption: User | null) => {
@@ -105,7 +107,7 @@ const ManageCourses = () => {
                 {selectedUser && (
                     <><Col sm={5} className='form-item'>
                         <Select
-                            options={courses}
+                            options={filteredCourses}
                             value={selectedCourse}
                             onChange={(course) => setSelectedCourse(course || undefined)}
                             getOptionLabel={(option) => option.name}
