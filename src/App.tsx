@@ -67,15 +67,15 @@ const App: React.FC = () => {
               {navData
                 .filter((nav) => nav.userType.includes(loggedInUser.type))
                 .map((nav) => (
-                  <Nav.Link key={nav.link} href={nav.link}>{nav.text}</Nav.Link>
+                  <Link to={nav.link} className='nav-link'>{nav.text}</Link>
                 ))}
               <Nav.Item className="d-md-none">
-                <Nav.Link href='/' onClick={handleLogout} className='logout'>Logout</Nav.Link>
+                <Link to='/' onClick={handleLogout} className='logout'>Logout</Link>
               </Nav.Item>
             </Nav>
           </Navbar.Collapse>
           <Nav className="d-none d-md-flex" style={{ marginRight: '20px' }} >
-            <Nav.Link href='/' onClick={handleLogout} className='logout'>Logout</Nav.Link>
+            <Link to='/' onClick={handleLogout} className='logout'>Logout</Link>
           </Nav>
         </Navbar>
         <div id="content" className="main-container">

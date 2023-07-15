@@ -34,7 +34,9 @@
     flex: 1;
     width: 200px;
 }
-
+.nav-link {
+    color: beige;
+}
 .logout {
     color: #e0d2d2;
 }
