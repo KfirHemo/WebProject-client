@@ -12,7 +12,7 @@ const ManageCourses = () => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [coursesForUser, setCoursesForUser] = useState<Course[]>([]);
     const [filteredCourses, setFilterdCourses] = useState<Course[]>([]);
-    const [selectedCourse, setSelectedCourse] = useState<Course>();
+    const [selectedCourse, setSelectedCourse] = useState<Course | null>();
     const [courses, setCourses] = useState<Course[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [coursesPerPage, setCoursesPerPage] = useState<number>(10);
@@ -38,6 +38,7 @@ const ManageCourses = () => {
             return true;
         });
         setFilterdCourses(filtered);
+        setSelectedCourse(null);
     }, [coursesForUser]);
 
     const handleUserChange = (selectedOption: User | null) => {
@@ -149,13 +150,14 @@ const ManageCourses = () => {
                                 ))}
                         </tbody>
                     </Table>
-                </div><PaginationComponent
+                </div>
+                    {coursesForUser.length > coursesPerPage && (<PaginationComponent
                         currentPage={currentPage}
                         itemsPerPage={coursesPerPage}
                         totalItems={coursesForUser.length}
                         onPageChange={setCurrentPage}
                         onItemsPerPageChange={(itemsPerPage) => setCoursesPerPage(itemsPerPage)}
-                        availableItemsPerPage={[10, 20, 50]} /></>
+                        availableItemsPerPage={[10, 20, 50]} />)}</>
             )}
         </Container>
             <ConfirmModal

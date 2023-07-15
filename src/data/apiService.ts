@@ -8,7 +8,7 @@ if (TEST_MODE) {
 }
 
 export default axios.create({
-    baseURL: 'https://localhost:5000',
+    baseURL: 'https://gradesproserver.azurewebsites.net/',
     headers: {
         'Content-Type': 'application/json',
     },
